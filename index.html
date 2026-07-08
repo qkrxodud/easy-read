@@ -11,7 +11,8 @@
   a { color: #2a63e8; text-decoration: none; }
   a:hover { color: #1e4db8; }
 
-  .nav { display: flex; align-items: center; gap: 10px; padding: 16px 40px; border-bottom: 1px solid #f0f1f3; position: sticky; top: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); z-index: 50; }
+  .nav { border-bottom: 1px solid #f0f1f3; position: sticky; top: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); z-index: 50; }
+  .nav-inner { max-width: 1080px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 16px 56px; }
   .logo-badge { width: 28px; height: 28px; border-radius: 8px; background: #2a63e8; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
   .nav-links { margin-left: auto; display: flex; align-items: center; gap: 22px; }
   .nav-links a { font-size: 14px; color: #55585d; }
@@ -74,7 +75,7 @@
     .section { padding: 40px 24px; }
     .grid3 { grid-template-columns: 1fr; }
     .cta-inner { padding: 40px 24px; }
-    .nav { padding: 14px 20px; }
+    .nav-inner { padding: 14px 24px; }
     .nav-links a.hide-m { display: none; }
   }
 </style>
@@ -82,12 +83,14 @@
 <body>
 
 <nav class="nav">
-  <span class="logo-badge">쉽</span>
-  <span style="font-size: 15px; font-weight: 700;">쉽게 읽기</span>
-  <div class="nav-links">
-    <a class="hide-m" href="#features">기능</a>
-    <a class="hide-m" href="https://github.com/qkrxodud/easy-read" target="_blank" rel="noopener">GitHub</a>
-    <button class="btn-primary" style="font-size: 13px; padding: 9px 18px;">Chrome에 추가</button>
+  <div class="nav-inner">
+    <span class="logo-badge">쉽</span>
+    <span style="font-size: 15px; font-weight: 700;">쉽게 읽기</span>
+    <div class="nav-links">
+      <a class="hide-m" href="#features">기능</a>
+      <a class="hide-m" href="https://github.com/qkrxodud/easy-read" target="_blank" rel="noopener">GitHub</a>
+      <button class="btn-primary" style="font-size: 13px; padding: 9px 18px;">Chrome에 추가</button>
+    </div>
   </div>
 </nav>
 
