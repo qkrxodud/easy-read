@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Easy Read — Privacy Policy</title>
+<meta name="description" content="Privacy Policy for the Easy Read Chrome extension. On-device by default; no data collection or sale.">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: #17181a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; line-height: 1.75; }
+  a { color: #2a63e8; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+  .top { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+  .badge { width: 30px; height: 30px; border-radius: 9px; background: #2a63e8; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .top .name { font-size: 16px; font-weight: 700; }
+  .top .lang { margin-left: auto; font-size: 13px; color: #83878d; }
+  .top .lang a { font-weight: 700; }
+  h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .updated { font-size: 13.5px; color: #83878d; margin: 0 0 32px; }
+  h2 { font-size: 19px; font-weight: 800; margin: 34px 0 10px; letter-spacing: -0.01em; }
+  p { font-size: 15px; color: #33363b; margin: 0 0 12px; }
+  ul { margin: 0 0 12px; padding-left: 20px; }
+  li { font-size: 15px; color: #33363b; margin-bottom: 6px; }
+  .callout { background: #f5f8ff; border: 1px solid #dbe6ff; border-radius: 14px; padding: 16px 18px; margin: 8px 0 4px; }
+  .callout p { margin: 0; font-size: 14.5px; }
+  strong { font-weight: 700; }
+  .foot { margin-top: 44px; padding-top: 20px; border-top: 1px solid #eceef1; font-size: 13px; color: #83878d; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top"><span class="badge">ER</span><span class="name">Easy Read</span><span class="lang"><a href="privacy.html">한국어</a> · English</span></div>
+
+  <h1>Privacy Policy</h1>
+  <p class="updated">Effective date: July 8, 2026</p>
+
+  <p>This policy explains how the Chrome extension <strong>Easy Read (쉽게 읽기)</strong> (the "Extension") handles user data. The Extension is a reading aid that rewrites text you select into clearer, conclusion-first sentences.</p>
+
+  <div class="callout">
+    <p><strong>Summary</strong> — By default, all processing happens on your device and no data leaves it. The developer does not collect, store, or sell any user data.</p>
+  </div>
+
+  <h2>1. Information we do not collect</h2>
+  <p>The developer does <strong>not collect or transmit to any developer server</strong> personally identifiable information (name, address, email, age, etc.), health information, financial or payment information, location, web browsing history, or user activity such as keystrokes or clicks. The Extension contains no analytics or trackers, and there is no developer-operated backend server.</p>
+
+  <h2>2. Information processed on your device (default behavior)</h2>
+  <p>The default engine is Chrome's built-in AI (Gemini Nano). Rewriting the text you select is performed <strong>entirely on your device</strong>, and the selected text is not transmitted externally.</p>
+  <p>The following data is stored only in your browser (<code>chrome.storage</code>) and is never sent to the developer or any third party:</p>
+  <ul>
+    <li>Settings: font size, output language (Korean/English), floating-button visibility, per-site hide list, selected model (engine), and the API key you enter.</li>
+    <li>Rewrite history: your recent summaries (up to 50 items).</li>
+  </ul>
+  <p>This data is removed when you uninstall the Extension or delete it from the options/history screens.</p>
+
+  <h2>3. Optional use of external AI providers (opt-in)</h2>
+  <p>In the options page you may choose an external AI provider and enter <strong>your own API key</strong> to use a more capable model. This feature runs <strong>only when you explicitly enable it.</strong></p>
+  <p>When an external provider is enabled, the <strong>text you select (website content)</strong> is sent to that provider's official API to be rewritten. The destinations and each provider's privacy policy are:</p>
+  <ul>
+    <li>OpenAI — <code>api.openai.com</code> · <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">OpenAI Privacy Policy</a></li>
+    <li>Anthropic — <code>api.anthropic.com</code> · <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic Privacy Policy</a></li>
+    <li>Google — <code>generativelanguage.googleapis.com</code> · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
+  </ul>
+  <p>In this case, processing of that text is governed by the policy of the provider you selected. The API key you enter is stored only on your device, is used solely to authenticate your request to that provider, and is never sent to the developer.</p>
+
+  <h2>4. No sale or transfer; purpose of use</h2>
+  <ul>
+    <li>We do not sell user data to third parties, nor transfer it for purposes other than the approved use case (providing the rewrite feature you requested).</li>
+    <li>We do not use data for any purpose unrelated to the Extension's single purpose (rewriting selected text to be easier to read).</li>
+    <li>We do not use or transfer data for creditworthiness or lending purposes.</li>
+  </ul>
+
+  <h2>5. Permissions</h2>
+  <p>The Extension requests only the minimum permissions needed for its single purpose: <code>contextMenus</code> (right-click menu), <code>activeTab</code> and <code>scripting</code> (reading selected text and showing the result card), <code>storage</code> (local storage of settings and history), and <code>sidePanel</code> (history panel). Host permissions are used only for the opt-in external API described in Section 3.</p>
+
+  <h2>6. Children's privacy</h2>
+  <p>The Extension is not directed at any particular age group and does not knowingly collect personal information from children.</p>
+
+  <h2>7. Changes to this policy</h2>
+  <p>This policy may be updated as needed; the effective date on this page will be updated when it changes.</p>
+
+  <h2>8. Contact</h2>
+  <p>For questions about data handling, please contact us:</p>
+  <ul>
+    <li>Email: <a href="mailto:qkrxodud00@gmail.com">qkrxodud00@gmail.com</a></li>
+    <li>Repository: <a href="https://github.com/qkrxodud/easy-read" target="_blank" rel="noopener">github.com/qkrxodud/easy-read</a></li>
+  </ul>
+
+  <div class="foot">© 2026 Easy Read (쉽게 읽기)</div>
+
+</div>
+</body>
+</html>
