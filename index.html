@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>쉽게 읽기 — 긴 글, 클릭 한 번으로 요약</title>
+<meta name="description" content="지금 보고 있는 페이지의 글을 클릭 한 번으로 핵심만 정리해주는 크롬 익스텐션. 무료, 회원가입 없음, 데이터는 내 브라우저에만 저장.">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: #17181a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+  a { color: #2a63e8; text-decoration: none; }
+  a:hover { color: #1e4db8; }
+
+  .nav { display: flex; align-items: center; gap: 10px; padding: 16px 40px; border-bottom: 1px solid #f0f1f3; position: sticky; top: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); z-index: 50; }
+  .logo-badge { width: 28px; height: 28px; border-radius: 8px; background: #2a63e8; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .nav-links { margin-left: auto; display: flex; align-items: center; gap: 22px; }
+  .nav-links a { font-size: 14px; color: #55585d; }
+  .btn-primary { border: none; background: #2a63e8; color: #fff; font-weight: 700; border-radius: 999px; cursor: pointer; }
+  .btn-primary:hover { background: #1e4db8; }
+
+  .hero { display: flex; align-items: center; gap: 56px; padding: 72px 56px; max-width: 1080px; margin: 0 auto; }
+  .hero h1 { margin: 0 0 18px; font-size: 46px; font-weight: 800; line-height: 1.28; letter-spacing: -0.03em; text-wrap: pretty; }
+  .hero p.lead { margin: 0 0 30px; font-size: 17px; line-height: 1.7; color: #55585d; text-wrap: pretty; }
+  .hero .note { margin: 12px 0 0; font-size: 13px; color: #9a9da3; }
+
+  .section { max-width: 1080px; margin: 0 auto; padding: 56px; }
+  .section h2 { margin: 0 0 32px; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .feature { background: #f5f6f8; border-radius: 18px; padding: 26px 24px; }
+  .feature .glyph { width: 40px; height: 40px; border-radius: 12px; background: #fff; color: #2a63e8; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .feature h3 { margin: 0 0 8px; font-size: 17px; font-weight: 700; }
+  .feature p { margin: 0; font-size: 14px; line-height: 1.65; color: #55585d; }
+  .step { border: 1px solid #eceef1; border-radius: 16px; padding: 24px; }
+  .step .num { font-size: 13px; font-weight: 800; color: #2a63e8; }
+  .step h3 { margin: 10px 0 8px; font-size: 16.5px; font-weight: 700; }
+  .step p { margin: 0; font-size: 14px; line-height: 1.65; color: #55585d; }
+
+  .cta-band { background: #17181a; }
+  .cta-inner { max-width: 1080px; margin: 0 auto; padding: 52px 56px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .cta-inner .txt { flex: 1; min-width: 260px; }
+  .cta-inner p.big { margin: 0 0 6px; font-size: 25px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+  .cta-inner p.sub { margin: 0; font-size: 14px; color: #9a9da3; }
+  .btn-white { white-space: nowrap; border: none; background: #fff; color: #17181a; font-size: 15px; font-weight: 700; padding: 14px 26px; border-radius: 999px; cursor: pointer; }
+  .btn-white:hover { background: #e6e7ea; }
+
+  .footer { max-width: 1080px; margin: 0 auto; padding: 20px 40px; display: flex; align-items: center; }
+  .footer span { font-size: 13px; color: #83878d; }
+  .footer .links { margin-left: auto; display: flex; gap: 18px; }
+  .footer .links a { font-size: 13px; color: #83878d; }
+
+  /* ── 데모 애니메이션 ── */
+  .demo-wrap { flex-shrink: 0; background: linear-gradient(160deg, #eef3fd, #dfe8fa); border-radius: 20px; padding: 28px; }
+  .demo-stage { position: relative; width: 350px; height: 470px; }
+  .demo-card { position: absolute; inset: 0; border-radius: 22px; }
+  .chip { display: flex; align-items: flex-start; gap: 9px; background: #e6e7ea; border-radius: 12px; padding: 9px 12px; }
+  .chip .dot { width: 5px; height: 5px; border-radius: 50%; background: #2a63e8; margin-top: 6px; flex-shrink: 0; }
+  .chip span:last-child { font-size: 11px; line-height: 1.55; color: #3a3d42; }
+
+  @keyframes selectLine { 0%, 4% { background: #eff0f2; } 10%, 100% { background: #b9d1f9; } }
+  @keyframes floatBtn { 0%, 9% { opacity: 0; transform: scale(0.6); } 13%, 27% { opacity: 1; transform: scale(1); } 31%, 100% { opacity: 0; transform: scale(0.9); } }
+  @keyframes cursorMove { 0% { transform: translate(130px, 190px); opacity: 0; } 5% { opacity: 1; transform: translate(130px, 190px); } 15%, 17% { transform: translate(0, 0); } 19% { transform: translate(0, 0) scale(0.8); } 21%, 24% { transform: translate(0, 0) scale(1); } 28%, 100% { opacity: 0; transform: translate(0, 0); } }
+  @keyframes popupIn { 0%, 23% { opacity: 0; transform: translateY(14px) scale(0.97); } 28%, 55% { opacity: 1; transform: translateY(0) scale(1); } 60%, 100% { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+  @keyframes p1 { 0%, 30% { opacity: 0; transform: translateY(6px); } 35%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes p2 { 0%, 35% { opacity: 0; transform: translateY(6px); } 40%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes p3 { 0%, 40% { opacity: 0; transform: translateY(6px); } 45%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes histIn { 0%, 60% { opacity: 0; transform: translateX(18px); } 65%, 94% { opacity: 1; transform: translateX(0); } 99%, 100% { opacity: 0; } }
+  @keyframes h1a { 0%, 66% { opacity: 0; transform: translateY(8px); } 71%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes h2a { 0%, 71% { opacity: 0; transform: translateY(8px); } 76%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes h3a { 0%, 76% { opacity: 0; transform: translateY(8px); } 81%, 100% { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 900px) {
+    .hero { flex-direction: column; padding: 48px 24px; gap: 40px; }
+    .hero h1 { font-size: 34px; }
+    .section { padding: 40px 24px; }
+    .grid3 { grid-template-columns: 1fr; }
+    .cta-inner { padding: 40px 24px; }
+    .nav { padding: 14px 20px; }
+    .nav-links a.hide-m { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="logo-badge">쉽</span>
+  <span style="font-size: 15px; font-weight: 700;">쉽게 읽기</span>
+  <div class="nav-links">
+    <a class="hide-m" href="#features">기능</a>
+    <a class="hide-m" href="https://github.com/qkrxodud/easy-read" target="_blank" rel="noopener">GitHub</a>
+    <button class="btn-primary" style="font-size: 13px; padding: 9px 18px;">Chrome에 추가</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div style="flex: 1; min-width: 280px;">
+    <h1>읽을지 말지,<br>요약 먼저 보고<br>결정하세요</h1>
+    <p class="lead">사내 공지, 뉴스, 블로그 — 어떤 페이지든 글을 선택하고 버튼 하나만 누르면 핵심 문장과 요점 목록으로 정리됩니다. 읽은 요약은 자동으로 기록에 남아요.</p>
+    <button class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;">Chrome에 추가하기 — 무료</button>
+    <p class="note">회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
+  </div>
+
+  <!-- 애니메이션 데모: 선택 → 요약 → 기록 -->
+  <div class="demo-wrap">
+    <div class="demo-stage">
+
+      <!-- stage 1: 글 선택 + 플로팅 버튼 -->
+      <div class="demo-card" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 16px rgba(42,99,232,0.1); padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="width: 220px; height: 17px; border-radius: 5px; background: #e6e7ea; margin-bottom: 8px;"></div>
+        <div style="width: 92%; height: 11px; border-radius: 4px; animation: selectLine 14s linear infinite;"></div>
+        <div style="width: 97%; height: 11px; border-radius: 4px; animation: selectLine 14s linear infinite;"></div>
+        <div style="width: 64%; height: 11px; border-radius: 4px; animation: selectLine 14s linear infinite;"></div>
+        <div style="width: 89%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
+        <div style="width: 94%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
+        <div style="width: 71%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
+        <div style="width: 90%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
+        <div style="width: 84%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
+        <div style="width: 52%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
+        <div style="position: absolute; top: 128px; left: 150px; display: flex; flex-direction: column; align-items: center; gap: 5px; animation: floatBtn 14s ease infinite;">
+          <span style="width: 42px; height: 42px; border-radius: 13px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); color: #2a63e8; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center;">쉽</span>
+          <span style="background: #3a3d42; color: #fff; font-size: 10.5px; font-weight: 600; padding: 4px 9px; border-radius: 6px; white-space: nowrap;">쉽게 읽기</span>
+        </div>
+        <div style="position: absolute; top: 146px; left: 176px; pointer-events: none; animation: cursorMove 14s ease-in-out infinite; z-index: 10;">
+          <div style="width: 0; height: 0; border-left: 9px solid #17181a; border-right: 5px solid transparent; border-bottom: 16px solid transparent; border-top: 5px solid transparent; transform: rotate(-70deg); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></div>
+        </div>
+      </div>
+
+      <!-- stage 2: 요약 팝업 -->
+      <div class="demo-card" style="background: #f2f2f4; box-shadow: 0 12px 36px rgba(42,99,232,0.2); padding: 15px; display: flex; flex-direction: column; gap: 9px; animation: popupIn 14s ease infinite; opacity: 0;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">쉽</span>
+          <span style="font-size: 14px; font-weight: 700;">쉽게 읽기</span>
+          <div style="margin-left: auto; display: flex; align-items: center; gap: 7px;">
+            <div style="display: flex; background: #e2e3e6; border-radius: 999px; padding: 2px;">
+              <span style="background: #2a63e8; color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px;">KO</span>
+              <span style="color: #83878d; font-size: 10px; font-weight: 700; padding: 3px 8px;">EN</span>
+            </div>
+            <span style="color: #55585d; font-size: 11px; font-weight: 600;">A− A+</span>
+            <span style="color: #55585d; font-size: 13px;">×</span>
+          </div>
+        </div>
+        <div style="background: #fff; border-radius: 14px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); animation: p1 14s ease infinite;">
+          <p style="margin: 0; font-size: 12.5px; font-weight: 700; line-height: 1.6;">사내 카페 리뉴얼 오픈 기념으로 이번 주 시즌 음료 할인 이벤트를 진행합니다.</p>
+        </div>
+        <div class="chip" style="animation: p2 14s ease infinite;"><span class="dot"></span><span>이벤트 기간은 7월 8일(수)부터 7월 10일(금)까지 3일간입니다.</span></div>
+        <div class="chip" style="animation: p3 14s ease infinite;"><span class="dot"></span><span>시즌 음료 전 메뉴를 30% 할인된 가격에 제공합니다.</span></div>
+        <button class="btn-primary" style="font-size: 12px; padding: 10px; width: 100%; margin-top: 2px;">원문 보기</button>
+        <div style="display: flex; justify-content: space-around; border-top: 1px solid #e2e3e6; padding-top: 10px; margin-top: 2px;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #55585d;"><span style="width: 30px; height: 30px; border-radius: 50%; background: #e6e7ea; display: flex; align-items: center; justify-content: center; font-size: 12px;">⧉</span><span style="font-size: 10px;">복사</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #55585d;"><span style="width: 30px; height: 30px; border-radius: 50%; background: #e6e7ea; display: flex; align-items: center; justify-content: center; font-size: 12px;">↻</span><span style="font-size: 10px;">다시 요약</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #55585d;"><span style="width: 30px; height: 30px; border-radius: 50%; background: #e6e7ea; display: flex; align-items: center; justify-content: center; font-size: 12px;">☰</span><span style="font-size: 10px;">기록</span></div>
+        </div>
+      </div>
+
+      <!-- stage 3: 기록 타임라인 -->
+      <div class="demo-card" style="background: #f2f2f4; box-shadow: 0 12px 36px rgba(42,99,232,0.2); padding: 16px; display: flex; flex-direction: column; gap: 10px; animation: histIn 14s ease infinite; opacity: 0;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">쉽</span>
+          <span style="font-size: 14px; font-weight: 700;">기록</span>
+          <span style="white-space: nowrap; margin-left: auto; background: #e6e7ea; color: #55585d; font-size: 10.5px; font-weight: 600; padding: 5px 11px; border-radius: 999px;">전체 삭제</span>
+        </div>
+        <span style="font-size: 10.5px; font-weight: 700; color: #9a9da3; letter-spacing: 0.03em; padding-left: 2px;">오늘</span>
+        <div style="display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: stretch; animation: h1a 14s ease infinite;">
+            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">방금 전</span></div>
+            <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
+            <div style="flex: 1; padding-bottom: 8px;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">[공지] 사내 카페 시즌 이벤트 안내</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">사내 카페 리뉴얼 오픈 기념으로 이번 주 시즌 음료 할인 이벤트를…</p></div></div>
+          </div>
+          <div style="display: flex; align-items: stretch; animation: h2a 14s ease infinite;">
+            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">3분 전</span></div>
+            <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
+            <div style="flex: 1; padding-bottom: 8px;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">[소식] 제품 업데이트 노트</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">검색 속도를 개선하고 자주 요청되던 다크 모드를 새로 추가했습니다.</p></div></div>
+          </div>
+          <div style="display: flex; align-items: stretch; animation: h3a 14s ease infinite;">
+            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">8분 전</span></div>
+            <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
+            <div style="flex: 1;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">[소식] 제품 업데이트 노트</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">이번 업데이트는 7월 1일부터 순차 적용되며, 알림 설정 화면이…</p></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<section class="section" id="features">
+  <h2>필요한 것만, 딱 세 가지</h2>
+  <div class="grid3">
+    <div class="feature">
+      <span class="glyph">요</span>
+      <h3>원클릭 요약</h3>
+      <p>글을 선택하면 나타나는 버튼 하나로, 핵심 문장 하나와 요점 목록이 바로 만들어집니다. 한국어·영어 요약을 전환할 수 있어요.</p>
+    </div>
+    <div class="feature">
+      <span class="glyph">록</span>
+      <h3>자동 기록</h3>
+      <p>요약한 글은 시간순 타임라인에 자동으로 쌓여, 사이드패널에서 언제든 다시 찾아볼 수 있습니다.</p>
+    </div>
+    <div class="feature">
+      <span class="glyph">안</span>
+      <h3>내 브라우저에만 저장</h3>
+      <p>요약 기록은 외부 서버가 아닌 내 브라우저에만 저장됩니다. 회원가입도 필요 없습니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 8px;">
+  <h2>사용 방법은 세 단계면 끝</h2>
+  <div class="grid3">
+    <div class="step">
+      <span class="num">01</span>
+      <h3>익스텐션 설치</h3>
+      <p>Chrome 웹 스토어에서 추가하면 준비 끝. 별도 설정이 필요 없습니다.</p>
+    </div>
+    <div class="step">
+      <span class="num">02</span>
+      <h3>글 선택 후 버튼 클릭</h3>
+      <p>요약하고 싶은 글을 드래그하면 '쉽게 읽기' 버튼이 나타납니다.</p>
+    </div>
+    <div class="step">
+      <span class="num">03</span>
+      <h3>요약 확인</h3>
+      <p>핵심 문장과 요점 목록을 확인하고, 필요하면 원문으로 이동하세요.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-inner">
+    <div class="txt">
+      <p class="big">다음 긴 글은 요약부터 읽어보세요</p>
+      <p class="sub">무료 · 오픈소스 · 회원가입 없음</p>
+    </div>
+    <button class="btn-white">Chrome에 추가하기</button>
+  </div>
+</section>
+
+<footer class="footer">
+  <span>© 2026 쉽게 읽기</span>
+  <div class="links">
+    <a href="https://github.com/qkrxodud/easy-read" target="_blank" rel="noopener">GitHub</a>
+    <a href="#">개인정보처리방침</a>
+  </div>
+</footer>
+
+</body>
+</html>
