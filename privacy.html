@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>쉽게 읽기 (Easy Read) — 개인정보처리방침</title>
+<meta name="description" content="쉽게 읽기(Easy Read) 크롬 익스텐션의 개인정보처리방침. 기본은 온디바이스 처리, 데이터 수집·판매 없음.">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: #17181a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; line-height: 1.75; }
+  a { color: #2a63e8; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+  .badge { width: 30px; height: 30px; border-radius: 9px; background: #2a63e8; color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .brand span { font-size: 16px; font-weight: 700; }
+  h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .updated { font-size: 13.5px; color: #83878d; margin: 0 0 32px; }
+  h2 { font-size: 19px; font-weight: 800; margin: 34px 0 10px; letter-spacing: -0.01em; }
+  p { font-size: 15px; color: #33363b; margin: 0 0 12px; }
+  ul { margin: 0 0 12px; padding-left: 20px; }
+  li { font-size: 15px; color: #33363b; margin-bottom: 6px; }
+  .callout { background: #f5f8ff; border: 1px solid #dbe6ff; border-radius: 14px; padding: 16px 18px; margin: 8px 0 4px; }
+  .callout p { margin: 0; font-size: 14.5px; }
+  strong { font-weight: 700; }
+  .foot { margin-top: 44px; padding-top: 20px; border-top: 1px solid #eceef1; font-size: 13px; color: #83878d; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand"><span class="badge">쉽</span><span>쉽게 읽기 (Easy Read)</span></div>
+
+  <h1>개인정보처리방침</h1>
+  <p class="updated">시행일: 2026년 7월 8일</p>
+
+  <p>본 방침은 크롬 익스텐션 <strong>쉽게 읽기(Easy Read)</strong>(이하 "확장 프로그램")가 사용자 데이터를 어떻게 다루는지 설명합니다. 확장 프로그램은 사용자가 선택한 텍스트를 더 읽기 쉬운 문장으로 다시 써 주는 읽기 보조 도구입니다.</p>
+
+  <div class="callout">
+    <p><strong>핵심 요약</strong> — 기본 설정에서는 모든 처리가 사용자의 기기 안에서 이루어지며 데이터가 외부로 전송되지 않습니다. 개발자는 어떠한 사용자 데이터도 수집·저장·판매하지 않습니다.</p>
+  </div>
+
+  <h2>1. 수집하지 않는 정보</h2>
+  <p>개발자는 개인 식별 정보(이름, 주소, 이메일, 연령 등), 건강 정보, 금융·결제 정보, 위치 정보, 웹 방문 기록, 키 입력·클릭 등 사용자 활동을 <strong>수집하거나 개발자 서버로 전송하지 않습니다.</strong> 확장 프로그램에는 분석 도구나 추적기가 포함되어 있지 않으며, 개발자가 운영하는 백엔드 서버가 없습니다.</p>
+
+  <h2>2. 기기 안에서 처리되는 정보 (기본 동작)</h2>
+  <p>기본 엔진은 Chrome 내장 AI(Gemini Nano)로, 사용자가 선택한 텍스트의 재작성이 <strong>전적으로 사용자의 기기 안에서</strong> 수행됩니다. 이 과정에서 선택한 텍스트는 외부로 전송되지 않습니다.</p>
+  <p>다음 데이터는 사용자의 브라우저(<code>chrome.storage</code>)에만 저장되며 개발자나 제3자에게 전송되지 않습니다.</p>
+  <ul>
+    <li>설정값: 글자 크기, 출력 언어(한국어/English), 플로팅 버튼 표시 여부, 사이트 숨김 목록, 선택한 모델(엔진), 입력한 API 키</li>
+    <li>재작성 기록: 최근 요약 결과(최대 50건)</li>
+  </ul>
+  <p>이 데이터는 사용자가 확장 프로그램을 삭제하거나 옵션·기록 화면에서 삭제하면 함께 제거됩니다.</p>
+
+  <h2>3. 외부 AI 제공사 사용 (선택 · 옵트인)</h2>
+  <p>사용자는 옵션 페이지에서 외부 AI 제공사를 직접 선택하고 <strong>본인의 API 키</strong>를 입력해 더 강력한 모델을 사용할 수 있습니다. 이 기능은 <strong>사용자가 명시적으로 켤 때만</strong> 동작합니다.</p>
+  <p>외부 제공사를 사용하도록 설정한 경우, 재작성을 위해 <strong>사용자가 선택한 텍스트(웹사이트 콘텐츠)</strong>가 해당 제공사의 공식 API로 전송됩니다. 전송 대상과 각 제공사의 개인정보 처리 정책은 다음과 같습니다.</p>
+  <ul>
+    <li>OpenAI — <code>api.openai.com</code> · <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">OpenAI Privacy Policy</a></li>
+    <li>Anthropic — <code>api.anthropic.com</code> · <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic Privacy Policy</a></li>
+    <li>Google — <code>generativelanguage.googleapis.com</code> · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
+  </ul>
+  <p>이 경우 해당 텍스트의 처리는 사용자가 선택한 제공사의 정책을 따릅니다. 입력한 API 키는 사용자의 기기에만 저장되며, 해당 제공사에 요청을 인증하는 용도로만 사용되고 개발자에게 전송되지 않습니다.</p>
+
+  <h2>4. 데이터의 판매·양도 및 사용 목적</h2>
+  <ul>
+    <li>사용자 데이터를 제3자에게 판매하거나, 승인된 사용 사례(요청한 재작성 기능 제공) 외의 목적으로 전송하지 않습니다.</li>
+    <li>확장 프로그램의 전용 목적(선택 텍스트의 읽기 쉬운 재작성)과 무관한 목적으로 데이터를 사용하지 않습니다.</li>
+    <li>신용도 판단 또는 대출 목적으로 데이터를 사용하거나 전송하지 않습니다.</li>
+  </ul>
+
+  <h2>5. 권한 사용</h2>
+  <p>확장 프로그램은 전용 목적 달성에 필요한 최소한의 권한만 요청합니다: <code>contextMenus</code>(우클릭 메뉴), <code>activeTab</code>·<code>scripting</code>(선택 텍스트 읽기 및 결과 카드 표시), <code>storage</code>(설정·기록 로컬 저장), <code>sidePanel</code>(기록 패널). 호스트 권한은 위 3절의 외부 API 옵트인 사용 시에만 사용됩니다.</p>
+
+  <h2>6. 아동 개인정보</h2>
+  <p>확장 프로그램은 특정 연령대를 대상으로 하지 않으며, 아동으로부터 개인정보를 고의로 수집하지 않습니다.</p>
+
+  <h2>7. 방침 변경</h2>
+  <p>본 방침은 필요 시 갱신될 수 있으며, 변경 시 본 페이지의 시행일이 업데이트됩니다.</p>
+
+  <h2>8. 문의</h2>
+  <p>개인정보 처리에 관한 문의는 아래로 연락해 주세요.</p>
+  <ul>
+    <li>이메일: <a href="mailto:qkrxodud00@gmail.com">qkrxodud00@gmail.com</a></li>
+    <li>저장소: <a href="https://github.com/qkrxodud/easy-read" target="_blank" rel="noopener">github.com/qkrxodud/easy-read</a></li>
+  </ul>
+
+  <div class="foot">© 2026 쉽게 읽기 (Easy Read)</div>
+
+</div>
+</body>
+</html>
