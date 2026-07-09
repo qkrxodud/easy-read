@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>또렷 — 긴 글, 클릭 한 번으로 요약</title>
-<meta name="description" content="지금 보고 있는 페이지의 글을 클릭 한 번으로 핵심만 정리해주는 크롬 익스텐션. 무료, 회원가입 없음, 데이터는 내 브라우저에만 저장.">
+<title>또렷 — 읽기도 쓰기도, 두괄식으로 또렷하게</title>
+<meta name="description" content="글을 선택하면 [요약]·[작성] 툴바가 뜨는 크롬 익스텐션. 읽는 글은 두괄식 요약으로, 내가 쓰는 글은 상대가 편히 읽는 두괄식으로 다시 써 줍니다. 무료, 회원가입 없음, 온디바이스 처리.">
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; background: #fff; color: #17181a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
@@ -95,8 +95,8 @@
 
 <header class="hero">
   <div style="flex: 1; min-width: 280px;">
-    <h1>읽을지 말지,<br>요약 먼저 보고<br>결정하세요</h1>
-    <p class="lead">사내 공지, 뉴스, 블로그 — 어떤 페이지든 글을 선택하고 버튼 하나만 누르면 핵심 문장과 요점 목록으로 정리됩니다. 읽은 요약은 자동으로 기록에 남아요.</p>
+    <h1>읽기도 쓰기도,<br>핵심부터<br>또렷하게</h1>
+    <p class="lead">어떤 페이지든 글을 선택하면 <b>[요약]·[작성]</b> 툴바가 뜹니다. <b>읽는 글</b>은 결론 먼저 오는 두괄식 요약으로, <b>내가 쓰는 글</b>은 상대가 편히 읽는 두괄식으로 다시 써 줍니다.</p>
     <button class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;">Chrome에 추가하기 — 무료</button>
     <p class="note">회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
   </div>
@@ -117,9 +117,9 @@
         <div style="width: 90%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="width: 84%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="width: 52%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="position: absolute; top: 128px; left: 150px; display: flex; flex-direction: column; align-items: center; gap: 5px; animation: floatBtn 14s ease infinite;">
-          <span style="width: 42px; height: 42px; border-radius: 13px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); color: #2a63e8; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center;">또</span>
-          <span style="background: #3a3d42; color: #fff; font-size: 10.5px; font-weight: 600; padding: 4px 9px; border-radius: 6px; white-space: nowrap;">또렷</span>
+        <div style="position: absolute; top: 126px; left: 120px; display: flex; align-items: center; gap: 4px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); border-radius: 999px; padding: 5px 6px; animation: floatBtn 14s ease infinite;">
+          <span style="display: flex; align-items: center; gap: 4px; background: #2a63e8; color: #fff; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; white-space: nowrap;">요약</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 10px; white-space: nowrap;">작성</span>
         </div>
         <div style="position: absolute; top: 146px; left: 176px; pointer-events: none; animation: cursorMove 14s ease-in-out infinite; z-index: 10;">
           <div style="width: 0; height: 0; border-left: 9px solid #17181a; border-right: 5px solid transparent; border-bottom: 16px solid transparent; border-top: 5px solid transparent; transform: rotate(-70deg); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></div>
@@ -185,22 +185,22 @@
 </header>
 
 <section class="section" id="features">
-  <h2>필요한 것만, 딱 세 가지</h2>
+  <h2>읽기와 쓰기, 두 가지 모드</h2>
   <div class="grid3">
     <div class="feature">
       <span class="glyph">요</span>
-      <h3>원클릭 요약</h3>
-      <p>글을 선택하면 나타나는 버튼 하나로, 핵심 문장 하나와 요점 목록이 바로 만들어집니다. 한국어·영어 요약을 전환할 수 있어요.</p>
+      <h3>요약 — 쉽게 읽기</h3>
+      <p>읽는 글을 선택하면 핵심 결론 한 문장과 요점 목록으로 정리됩니다. 한국어·영어 요약을 전환할 수 있고, 결과는 기록에 자동 저장돼요.</p>
     </div>
     <div class="feature">
-      <span class="glyph">록</span>
-      <h3>자동 기록</h3>
-      <p>요약한 글은 시간순 타임라인에 자동으로 쌓여, 사이드패널에서 언제든 다시 찾아볼 수 있습니다.</p>
+      <span class="glyph">작</span>
+      <h3>작성 — 두괄식으로 다시 쓰기</h3>
+      <p>내가 쓴 초안을 상대가 편히 읽는 두괄식 문장으로 다시 써 줍니다. Gmail·문서 같은 편집창에서는 <b>[적용]</b>으로 그 자리에 바로 교체돼요.</p>
     </div>
     <div class="feature">
       <span class="glyph">안</span>
-      <h3>내 브라우저에만 저장</h3>
-      <p>요약 기록은 외부 서버가 아닌 내 브라우저에만 저장됩니다. 회원가입도 필요 없습니다.</p>
+      <h3>내 브라우저에만 · 무료</h3>
+      <p>기본은 온디바이스 AI라 데이터가 밖으로 나가지 않습니다. 요약 기록도 내 브라우저에만. 회원가입·API 키가 필요 없습니다.</p>
     </div>
   </div>
 </section>
@@ -215,13 +215,13 @@
     </div>
     <div class="step">
       <span class="num">02</span>
-      <h3>글 선택 후 버튼 클릭</h3>
-      <p>요약하고 싶은 글을 드래그하면 '또렷' 버튼이 나타납니다.</p>
+      <h3>글 선택 → 요약/작성</h3>
+      <p>글을 드래그하면 <b>[요약]·[작성]</b> 툴바가 나타납니다. 읽을 땐 요약, 쓸 땐 작성을 누르세요.</p>
     </div>
     <div class="step">
       <span class="num">03</span>
-      <h3>요약 확인</h3>
-      <p>핵심 문장과 요점 목록을 확인하고, 필요하면 원문으로 이동하세요.</p>
+      <h3>확인하고 적용</h3>
+      <p>요약을 읽거나, 작성 결과를 <b>[적용]</b>으로 편집창에 바로 넣으세요. 복사도 한 번에.</p>
     </div>
   </div>
 </section>
@@ -229,7 +229,7 @@
 <section class="cta-band">
   <div class="cta-inner">
     <div class="txt">
-      <p class="big">다음 긴 글은 요약부터 읽어보세요</p>
+      <p class="big">긴 글은 요약부터, 보낼 글은 작성부터</p>
       <p class="sub">무료 · 회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
     </div>
     <button class="btn-white">Chrome에 추가하기</button>
