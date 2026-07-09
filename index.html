@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>쉽게 읽기 — 긴 글, 클릭 한 번으로 요약</title>
+<title>또렷 — 긴 글, 클릭 한 번으로 요약</title>
 <meta name="description" content="지금 보고 있는 페이지의 글을 클릭 한 번으로 핵심만 정리해주는 크롬 익스텐션. 무료, 회원가입 없음, 데이터는 내 브라우저에만 저장.">
 <style>
   * { box-sizing: border-box; }
@@ -84,8 +84,8 @@
 
 <nav class="nav">
   <div class="nav-inner">
-    <span class="logo-badge">쉽</span>
-    <span style="font-size: 15px; font-weight: 700;">쉽게 읽기</span>
+    <span class="logo-badge">또</span>
+    <span style="font-size: 15px; font-weight: 700;">또렷</span>
     <div class="nav-links">
       <a class="hide-m" href="#features">기능</a>
       <button class="btn-primary" style="font-size: 13px; padding: 9px 18px;">Chrome에 추가</button>
@@ -118,8 +118,8 @@
         <div style="width: 84%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="width: 52%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="position: absolute; top: 128px; left: 150px; display: flex; flex-direction: column; align-items: center; gap: 5px; animation: floatBtn 14s ease infinite;">
-          <span style="width: 42px; height: 42px; border-radius: 13px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); color: #2a63e8; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center;">쉽</span>
-          <span style="background: #3a3d42; color: #fff; font-size: 10.5px; font-weight: 600; padding: 4px 9px; border-radius: 6px; white-space: nowrap;">쉽게 읽기</span>
+          <span style="width: 42px; height: 42px; border-radius: 13px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); color: #2a63e8; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center;">또</span>
+          <span style="background: #3a3d42; color: #fff; font-size: 10.5px; font-weight: 600; padding: 4px 9px; border-radius: 6px; white-space: nowrap;">또렷</span>
         </div>
         <div style="position: absolute; top: 146px; left: 176px; pointer-events: none; animation: cursorMove 14s ease-in-out infinite; z-index: 10;">
           <div style="width: 0; height: 0; border-left: 9px solid #17181a; border-right: 5px solid transparent; border-bottom: 16px solid transparent; border-top: 5px solid transparent; transform: rotate(-70deg); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></div>
@@ -129,8 +129,8 @@
       <!-- stage 2: 요약 팝업 -->
       <div class="demo-card" style="background: #f2f2f4; box-shadow: 0 12px 36px rgba(42,99,232,0.2); padding: 15px; display: flex; flex-direction: column; gap: 9px; animation: popupIn 14s ease infinite; opacity: 0;">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">쉽</span>
-          <span style="font-size: 14px; font-weight: 700;">쉽게 읽기</span>
+          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">또</span>
+          <span style="font-size: 14px; font-weight: 700;">또렷</span>
           <div style="margin-left: auto; display: flex; align-items: center; gap: 7px;">
             <div style="display: flex; background: #e2e3e6; border-radius: 999px; padding: 2px;">
               <span style="background: #2a63e8; color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px;">KO</span>
@@ -156,7 +156,7 @@
       <!-- stage 3: 기록 타임라인 -->
       <div class="demo-card" style="background: #f2f2f4; box-shadow: 0 12px 36px rgba(42,99,232,0.2); padding: 16px; display: flex; flex-direction: column; gap: 10px; animation: histIn 14s ease infinite; opacity: 0;">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">쉽</span>
+          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">또</span>
           <span style="font-size: 14px; font-weight: 700;">기록</span>
           <span style="white-space: nowrap; margin-left: auto; background: #e6e7ea; color: #55585d; font-size: 10.5px; font-weight: 600; padding: 5px 11px; border-radius: 999px;">전체 삭제</span>
         </div>
@@ -216,7 +216,7 @@
     <div class="step">
       <span class="num">02</span>
       <h3>글 선택 후 버튼 클릭</h3>
-      <p>요약하고 싶은 글을 드래그하면 '쉽게 읽기' 버튼이 나타납니다.</p>
+      <p>요약하고 싶은 글을 드래그하면 '또렷' 버튼이 나타납니다.</p>
     </div>
     <div class="step">
       <span class="num">03</span>
@@ -237,7 +237,7 @@
 </section>
 
 <footer class="footer">
-  <span>© 2026 쉽게 읽기</span>
+  <span>© 2026 또렷</span>
   <div class="links">
     <a href="privacy.html">개인정보처리방침</a>
   </div>
