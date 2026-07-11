@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>또렷 — 읽기도 쓰기도, 두괄식으로 또렷하게</title>
-<meta name="description" content="글을 선택하면 [요약]·[작성] 툴바가 뜨는 크롬 익스텐션. 읽는 글은 두괄식 요약으로, 내가 쓰는 글은 상대가 편히 읽는 두괄식으로 다시 써 줍니다. 무료, 회원가입 없음, 온디바이스 처리.">
+<title>또렷 — 요약·작성·말투·번역, 선택 한 번으로 또렷하게</title>
+<meta name="description" content="글을 선택하면 [요약]·[작성]·[말투]·[번역] 툴바가 뜨는 크롬 익스텐션. 두괄식 요약, 두괄식 다시 쓰기, 존댓말↔반말 말투 변환, 온디바이스 번역까지. 결과를 소리로 읽어주는 읽어주기도. 무료, 회원가입 없음, 온디바이스 처리.">
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; background: #fff; color: #17181a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
@@ -27,6 +27,7 @@
   .section { max-width: 1080px; margin: 0 auto; padding: 56px; }
   .section h2 { margin: 0 0 32px; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
   .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .feature { background: #f5f6f8; border-radius: 18px; padding: 26px 24px; }
   .feature .glyph { width: 40px; height: 40px; border-radius: 12px; background: #fff; color: #2a63e8; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
   .feature h3 { margin: 0 0 8px; font-size: 17px; font-weight: 700; }
@@ -48,6 +49,55 @@
   .footer span { font-size: 13px; color: #83878d; }
   .footer .links { margin-left: auto; display: flex; gap: 18px; }
   .footer .links a { font-size: 13px; color: #83878d; }
+
+  /* ── 스탯 스트립 ── */
+  .stats { border-top: 1px solid #f0f1f3; border-bottom: 1px solid #f0f1f3; background: #fafbfc; }
+  .stats-inner { max-width: 1080px; margin: 0 auto; padding: 30px 56px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .stat { text-align: center; }
+  .stat .big { font-size: 27px; font-weight: 800; letter-spacing: -0.02em; color: #17181a; }
+  .stat .big small { font-size: 15px; font-weight: 700; }
+  .stat .lbl { margin-top: 5px; font-size: 12.5px; line-height: 1.4; color: #83878d; }
+
+  /* ── 활용 사례 ── */
+  .usecase { display: flex; gap: 14px; align-items: flex-start; background: #f5f6f8; border-radius: 16px; padding: 20px 22px; }
+  .usecase .ico { flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .usecase h3 { margin: 2px 0 5px; font-size: 15.5px; font-weight: 700; }
+  .usecase p { margin: 0; font-size: 13.5px; line-height: 1.6; color: #55585d; }
+
+  /* ── Before / After ── */
+  .ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: stretch; }
+  .ba-col { border-radius: 18px; padding: 24px; }
+  .ba-before { background: #f5f6f8; border: 1px solid #eceef1; }
+  .ba-after { background: #eef3fd; border: 1px solid #d9e4fb; }
+  .ba-tag { display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: 0.04em; padding: 4px 11px; border-radius: 999px; margin-bottom: 14px; }
+  .ba-before .ba-tag { background: #e6e7ea; color: #6b6e74; }
+  .ba-after .ba-tag { background: #2a63e8; color: #fff; }
+  .ba-col p.body { margin: 0; font-size: 14px; line-height: 1.75; color: #55585d; }
+  .ba-concl { margin: 0 0 4px; font-size: 14.5px; font-weight: 700; line-height: 1.6; color: #17181a; }
+  .ba-arrow { align-self: center; font-size: 22px; color: #2a63e8; font-weight: 800; }
+  .ba-li { display: flex; gap: 9px; align-items: flex-start; margin-top: 10px; font-size: 13.5px; line-height: 1.6; color: #3a3d42; }
+  .ba-li .d { width: 6px; height: 6px; border-radius: 50%; background: #2a63e8; margin-top: 7px; flex-shrink: 0; }
+
+  /* ── 신뢰 밴드 ── */
+  .trust { background: #eef3fd; }
+  .trust-inner { max-width: 1080px; margin: 0 auto; padding: 56px; }
+  .trust h2 { margin: 0 0 10px; font-size: 27px; font-weight: 800; letter-spacing: -0.02em; }
+  .trust .sub { margin: 0 0 28px; font-size: 15px; color: #55585d; line-height: 1.7; max-width: 640px; }
+  .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .trust-card { background: #fff; border-radius: 16px; padding: 22px; }
+  .trust-card .ico { font-size: 22px; margin-bottom: 10px; }
+  .trust-card h3 { margin: 0 0 6px; font-size: 15.5px; font-weight: 700; }
+  .trust-card p { margin: 0; font-size: 13.5px; line-height: 1.65; color: #55585d; }
+
+  /* ── FAQ ── */
+  .faq details { border: 1px solid #eceef1; border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
+  .faq summary { list-style: none; cursor: pointer; padding: 18px 22px; font-size: 15.5px; font-weight: 700; color: #17181a; display: flex; align-items: center; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; margin-left: auto; padding-left: 16px; font-size: 21px; font-weight: 400; color: #9a9da3; }
+  .faq details[open] summary::after { content: "\2212"; }
+  .faq details[open] summary { border-bottom: 1px solid #f0f1f3; }
+  .faq .ans { padding: 16px 22px 20px; font-size: 14px; line-height: 1.75; color: #55585d; }
+  .faq .ans b { color: #3a3d42; }
 
   /* ── 데모 애니메이션 ── */
   .demo-wrap { flex-shrink: 0; background: linear-gradient(160deg, #eef3fd, #dfe8fa); border-radius: 20px; padding: 28px; }
@@ -73,7 +123,12 @@
     .hero { flex-direction: column; padding: 48px 24px; gap: 40px; }
     .hero h1 { font-size: 34px; }
     .section { padding: 40px 24px; }
-    .grid3 { grid-template-columns: 1fr; }
+    .grid3, .grid2 { grid-template-columns: 1fr; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 22px 16px; padding: 28px 24px; }
+    .ba { grid-template-columns: 1fr; }
+    .ba-arrow { transform: rotate(90deg); justify-self: center; }
+    .trust-inner { padding: 40px 24px; }
+    .trust-grid { grid-template-columns: 1fr; }
     .cta-inner { padding: 40px 24px; }
     .nav-inner { padding: 14px 24px; }
     .nav-links a.hide-m { display: none; }
@@ -88,6 +143,8 @@
     <span style="font-size: 15px; font-weight: 700;">또렷</span>
     <div class="nav-links">
       <a class="hide-m" href="#features">기능</a>
+      <a class="hide-m" href="#usecases">활용</a>
+      <a class="hide-m" href="#faq">FAQ</a>
       <button class="btn-primary" style="font-size: 13px; padding: 9px 18px;">Chrome에 추가</button>
     </div>
   </div>
@@ -96,7 +153,7 @@
 <header class="hero">
   <div style="flex: 1; min-width: 280px;">
     <h1>읽기도 쓰기도,<br>핵심부터<br>또렷하게</h1>
-    <p class="lead">어떤 페이지든 글을 선택하면 <b>[요약]·[작성]</b> 툴바가 뜹니다. <b>읽는 글</b>은 결론 먼저 오는 두괄식 요약으로, <b>내가 쓰는 글</b>은 상대가 편히 읽는 두괄식으로 다시 써 줍니다.</p>
+    <p class="lead">어떤 페이지든 글을 선택하면 <b>[요약]·[작성]·[말투]·[번역]</b> 툴바가 뜹니다. 읽는 글은 두괄식 요약으로, 쓰는 글은 상대가 편히 읽는 두괄식으로, 말투는 존댓말↔반말로, 낯선 언어는 그 자리에서 번역까지. 결과는 <b>소리로 읽어주기</b>도 됩니다.</p>
     <button class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;">Chrome에 추가하기 — 무료</button>
     <p class="note">회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
   </div>
@@ -117,9 +174,11 @@
         <div style="width: 90%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="width: 84%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="width: 52%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="position: absolute; top: 126px; left: 120px; display: flex; align-items: center; gap: 4px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); border-radius: 999px; padding: 5px 6px; animation: floatBtn 14s ease infinite;">
+        <div style="position: absolute; top: 126px; left: 58px; display: flex; align-items: center; gap: 2px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); border-radius: 999px; padding: 5px 6px; animation: floatBtn 14s ease infinite;">
           <span style="display: flex; align-items: center; gap: 4px; background: #2a63e8; color: #fff; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; white-space: nowrap;">요약</span>
-          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 10px; white-space: nowrap;">작성</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">작성</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">말투</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">번역</span>
         </div>
         <div style="position: absolute; top: 146px; left: 176px; pointer-events: none; animation: cursorMove 14s ease-in-out infinite; z-index: 10;">
           <div style="width: 0; height: 0; border-left: 9px solid #17181a; border-right: 5px solid transparent; border-bottom: 16px solid transparent; border-top: 5px solid transparent; transform: rotate(-70deg); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></div>
@@ -148,7 +207,7 @@
         <button class="btn-primary" style="font-size: 12px; padding: 10px; width: 100%; margin-top: 2px;">원문 보기</button>
         <div style="display: flex; justify-content: space-around; border-top: 1px solid #e2e3e6; padding-top: 10px; margin-top: 2px;">
           <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #55585d;"><span style="width: 30px; height: 30px; border-radius: 50%; background: #e6e7ea; display: flex; align-items: center; justify-content: center; font-size: 12px;">⧉</span><span style="font-size: 10px;">복사</span></div>
-          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #55585d;"><span style="width: 30px; height: 30px; border-radius: 50%; background: #e6e7ea; display: flex; align-items: center; justify-content: center; font-size: 12px;">↻</span><span style="font-size: 10px;">다시 요약</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #55585d;"><span style="width: 30px; height: 30px; border-radius: 50%; background: #e6e7ea; display: flex; align-items: center; justify-content: center; font-size: 12px;">🔊</span><span style="font-size: 10px;">읽어주기</span></div>
           <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #55585d;"><span style="width: 30px; height: 30px; border-radius: 50%; background: #e6e7ea; display: flex; align-items: center; justify-content: center; font-size: 12px;">☰</span><span style="font-size: 10px;">기록</span></div>
         </div>
       </div>
@@ -184,23 +243,102 @@
   </div>
 </header>
 
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat"><div class="big">4<small>가지</small></div><div class="lbl">요약·작성·<br>말투·번역</div></div>
+    <div class="stat"><div class="big">0<small>원</small></div><div class="lbl">평생 무료<br>결제 없음</div></div>
+    <div class="stat"><div class="big">100<small>%</small></div><div class="lbl">온디바이스<br>처리</div></div>
+    <div class="stat"><div class="big">한·영</div><div class="lbl">두 언어<br>즉시 전환</div></div>
+    <div class="stat"><div class="big">0<small>건</small></div><div class="lbl">회원가입·<br>API 키</div></div>
+  </div>
+</div>
+
 <section class="section" id="features">
-  <h2>읽기와 쓰기, 두 가지 모드</h2>
-  <div class="grid3">
+  <h2>선택 한 번, 네 가지 방식으로</h2>
+  <div class="grid2">
     <div class="feature">
       <span class="glyph">요</span>
       <h3>요약 — 쉽게 읽기</h3>
-      <p>읽는 글을 선택하면 핵심 결론 한 문장과 요점 목록으로 정리됩니다. 한국어·영어 요약을 전환할 수 있고, 결과는 기록에 자동 저장돼요.</p>
+      <p>읽는 글을 선택하면 핵심 결론 한 문장과 요점 목록으로 정리됩니다. <b>짧게·보통·길게</b> 길이를 고르고, 한국어·영어 요약을 전환할 수 있어요.</p>
     </div>
     <div class="feature">
       <span class="glyph">작</span>
       <h3>작성 — 두괄식으로 다시 쓰기</h3>
-      <p>내가 쓴 초안을 상대가 편히 읽는 두괄식 문장으로 다시 써 줍니다. Gmail·문서 같은 편집창에서는 <b>[적용]</b>으로 그 자리에 바로 교체돼요.</p>
+      <p>내가 쓴 초안을 상대가 편히 읽는 두괄식 문장으로 다시 써 줍니다. <b>정중·친근·간결</b> 톤을 고르고, 편집창에서는 <b>[적용]</b>으로 그 자리에 바로 교체돼요.</p>
+    </div>
+    <div class="feature">
+      <span class="glyph">말</span>
+      <h3>말투 — 존댓말 ↔ 반말</h3>
+      <p>뜻은 그대로 두고 말투만 바꿉니다. 딱딱한 문장을 부드럽게, 편한 메모를 정중하게. <b>존댓말·반말</b>을 한 번에 전환해요.</p>
+    </div>
+    <div class="feature">
+      <span class="glyph">번</span>
+      <h3>번역 — 그 자리에서</h3>
+      <p>낯선 언어의 글을 <b>한국어·English</b>로 즉시 번역합니다. Chrome 내장 번역이라 이 역시 <b>기기 안에서</b> 처리돼요.</p>
+    </div>
+  </div>
+  <div class="grid3" style="margin-top: 16px;">
+    <div class="feature">
+      <span class="glyph">🔊</span>
+      <h3>읽어주기</h3>
+      <p>요약·번역 결과를 <b>소리로 읽어줍니다</b>. 화면을 보기 어려울 때도 귀로 확인하세요.</p>
+    </div>
+    <div class="feature">
+      <span class="glyph">☰</span>
+      <h3>기록에 자동 저장</h3>
+      <p>결과는 툴바 아이콘의 <b>기록 패널</b>에 날짜별로 쌓입니다. 검색·삭제도 내 브라우저 안에서.</p>
     </div>
     <div class="feature">
       <span class="glyph">안</span>
       <h3>내 브라우저에만 · 무료</h3>
-      <p>기본은 온디바이스 AI라 데이터가 밖으로 나가지 않습니다. 요약 기록도 내 브라우저에만. 회원가입·API 키가 필요 없습니다.</p>
+      <p>기본은 온디바이스 AI라 데이터가 밖으로 나가지 않습니다. 회원가입·API 키가 필요 없어요.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="usecases" style="padding-top: 8px;">
+  <h2>이럴 때 특히 또렷해집니다</h2>
+  <div class="grid3">
+    <div class="usecase">
+      <span class="ico">📰</span>
+      <div><h3>긴 뉴스·아티클</h3><p>스크롤이 끝없는 기사도 결론 한 문장과 요점 몇 줄로. 읽기 전에 핵심부터 파악하세요.</p></div>
+    </div>
+    <div class="usecase">
+      <span class="ico">📧</span>
+      <div><h3>회사 메일·공지</h3><p>돌려 말한 장문 메일에서 "그래서 뭘 하라는 건지"만 뽑아냅니다. 날짜·조건도 그대로.</p></div>
+    </div>
+    <div class="usecase">
+      <span class="ico">📄</span>
+      <div><h3>약관·설명서</h3><p>딱딱하고 어려운 문장을 쉬운 말로 풀어 줍니다. 동의 버튼 누르기 전에 무슨 뜻인지 확인.</p></div>
+    </div>
+    <div class="usecase">
+      <span class="ico">✍️</span>
+      <div><h3>메일·메시지 초안</h3><p>급하게 쓴 초안을 상대가 편히 읽는 두괄식으로. 편집창이면 <b>[적용]</b>으로 그 자리에 교체돼요.</p></div>
+    </div>
+    <div class="usecase">
+      <span class="ico">🌏</span>
+      <div><h3>외국어 페이지</h3><p>낯선 언어의 문단을 그 자리에서 한국어·English로. 번역도 기기 안에서 처리됩니다.</p></div>
+    </div>
+    <div class="usecase">
+      <span class="ico">💬</span>
+      <div><h3>말투가 어색할 때</h3><p>딱딱한 문장은 부드럽게, 편한 메모는 정중하게. 존댓말↔반말을 한 번에 바꿔요.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 8px;">
+  <h2>장황한 글이, 이렇게 바뀝니다</h2>
+  <div class="ba">
+    <div class="ba-col ba-before">
+      <span class="ba-tag">원문</span>
+      <p class="body">안녕하세요, 총무팀입니다. 다름이 아니라 이번에 사내 카페가 리뉴얼 오픈을 하게 되어, 그 기념으로 시즌 음료 관련 할인 이벤트를 준비했는데요. 기간은 7월 8일 수요일부터 10일 금요일까지이고, 해당 기간 동안 시즌 음료 메뉴 전체를 30% 할인된 금액으로 드실 수 있으니 많은 이용 부탁드립니다.</p>
+    </div>
+    <div class="ba-arrow">→</div>
+    <div class="ba-col ba-after">
+      <span class="ba-tag">또렷 요약</span>
+      <p class="ba-concl">사내 카페 리뉴얼 기념 시즌 음료 30% 할인 이벤트를 진행합니다.</p>
+      <div class="ba-li"><span class="d"></span><span>기간: 7월 8일(수)~10일(금), 3일간</span></div>
+      <div class="ba-li"><span class="d"></span><span>대상: 시즌 음료 전 메뉴 30% 할인</span></div>
     </div>
   </div>
 </section>
@@ -215,21 +353,75 @@
     </div>
     <div class="step">
       <span class="num">02</span>
-      <h3>글 선택 → 요약/작성</h3>
-      <p>글을 드래그하면 <b>[요약]·[작성]</b> 툴바가 나타납니다. 읽을 땐 요약, 쓸 땐 작성을 누르세요.</p>
+      <h3>글 선택 → 모드 선택</h3>
+      <p>글을 드래그하면 <b>[요약]·[작성]·[말투]·[번역]</b> 툴바가 나타납니다. 지금 필요한 하나를 누르세요.</p>
     </div>
     <div class="step">
       <span class="num">03</span>
       <h3>확인하고 적용</h3>
-      <p>요약을 읽거나, 작성 결과를 <b>[적용]</b>으로 편집창에 바로 넣으세요. 복사도 한 번에.</p>
+      <p>결과를 읽거나 <b>들어 보고</b>, 작성 결과는 <b>[적용]</b>으로 편집창에 바로 넣으세요. 복사도 한 번에.</p>
     </div>
+  </div>
+</section>
+
+<section class="trust">
+  <div class="trust-inner">
+    <h2>내 글은 내 브라우저를 떠나지 않습니다</h2>
+    <p class="sub">또렷은 기본적으로 Chrome에 내장된 AI로 <b>기기 안에서</b> 처리합니다. 선택한 글이 외부 서버로 전송되지 않고, 로그인도 필요 없어요.</p>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="ico">🔒</div>
+        <h3>온디바이스 처리</h3>
+        <p>요약·말투·번역이 브라우저 안에서 끝납니다. 회사 문서도, 개인 메일도 밖으로 나가지 않아요.</p>
+      </div>
+      <div class="trust-card">
+        <div class="ico">🎁</div>
+        <h3>평생 무료</h3>
+        <p>구독도, 광고도, 사용량 제한도 없습니다. 설치하는 순간 모든 기능을 그대로 쓸 수 있어요.</p>
+      </div>
+      <div class="trust-card">
+        <div class="ico">⚙️</div>
+        <h3>원하면 더 강력하게</h3>
+        <p>옵션에서 내 OpenAI·Anthropic·Gemini API 키를 넣어 더 큰 모델로 바꿀 수도 있어요. 선택은 자유.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <h2>자주 묻는 질문</h2>
+  <div class="faq">
+    <details open>
+      <summary>정말 무료인가요?</summary>
+      <div class="ans">네. 요약·작성·말투·번역·읽어주기·기록까지 <b>모든 기능이 무료</b>입니다. 결제 수단을 등록할 필요도, 사용량 제한도 없습니다.</div>
+    </details>
+    <details>
+      <summary>제 데이터는 어디에 저장되나요?</summary>
+      <div class="ans">기본 설정에서는 선택한 글이 <b>외부로 전송되지 않고</b> 브라우저 안에서 처리됩니다. 기록도 내 컴퓨터의 브라우저 저장소에만 쌓이고, 검색·삭제도 직접 관리해요.</div>
+    </details>
+    <details>
+      <summary>어떤 언어를 지원하나요?</summary>
+      <div class="ans">요약 결과는 <b>한국어와 English</b>를 카드에서 바로 전환할 수 있고, 번역은 낯선 언어의 글을 한국어·영어로 바꿔 줍니다.</div>
+    </details>
+    <details>
+      <summary>설치가 복잡하지 않나요?</summary>
+      <div class="ans">Chrome 웹 스토어에서 추가하면 끝입니다. 별도 설정 없이, 글을 드래그하면 바로 <b>[요약]·[작성]·[말투]·[번역]</b> 툴바가 떠요. 단축키 <b>Alt+E</b>나 우클릭 메뉴로도 쓸 수 있습니다.</div>
+    </details>
+    <details>
+      <summary>편집창에서 글을 쓸 때도 되나요?</summary>
+      <div class="ans">네. 메일·게시글 입력창처럼 편집 가능한 곳에서 초안을 선택하면 두괄식으로 다시 써 주고, <b>[적용]</b>을 누르면 그 자리에 바로 교체됩니다.</div>
+    </details>
+    <details>
+      <summary>더 똑똑한 AI를 쓰고 싶어요.</summary>
+      <div class="ans">옵션 페이지에서 내 <b>OpenAI·Anthropic·Gemini API 키</b>를 입력하면 해당 모델로 전환됩니다. 이 경우 선택한 글이 해당 제공사로 전송되며, 안내에 따라 직접 선택할 수 있어요.</div>
+    </details>
   </div>
 </section>
 
 <section class="cta-band">
   <div class="cta-inner">
     <div class="txt">
-      <p class="big">긴 글은 요약부터, 보낼 글은 작성부터</p>
+      <p class="big">읽고, 쓰고, 말투 바꾸고, 번역까지 — 선택 한 번으로</p>
       <p class="sub">무료 · 회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
     </div>
     <button class="btn-white">Chrome에 추가하기</button>
