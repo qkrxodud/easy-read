@@ -16,7 +16,7 @@
   .logo-badge { width: 28px; height: 28px; border-radius: 8px; background: #2a63e8; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
   .nav-links { margin-left: auto; display: flex; align-items: center; gap: 22px; }
   .nav-links a { font-size: 14px; color: #55585d; }
-  .btn-primary { border: none; background: #2a63e8; color: #fff; font-weight: 700; border-radius: 999px; cursor: pointer; }
+  .btn-primary { border: none; background: #2a63e8; color: #fff; font-weight: 700; border-radius: 999px; cursor: pointer; display: inline-block; text-decoration: none; text-align: center; }
   .btn-primary:hover { background: #1e4db8; }
 
   .hero { display: flex; align-items: center; gap: 56px; padding: 72px 56px; max-width: 1080px; margin: 0 auto; }
@@ -42,7 +42,7 @@
   .cta-inner .txt { flex: 1; min-width: 260px; }
   .cta-inner p.big { margin: 0 0 6px; font-size: 25px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
   .cta-inner p.sub { margin: 0; font-size: 14px; color: #9a9da3; }
-  .btn-white { white-space: nowrap; border: none; background: #fff; color: #17181a; font-size: 15px; font-weight: 700; padding: 14px 26px; border-radius: 999px; cursor: pointer; }
+  .btn-white { white-space: nowrap; border: none; background: #fff; color: #17181a; font-size: 15px; font-weight: 700; padding: 14px 26px; border-radius: 999px; cursor: pointer; display: inline-block; text-decoration: none; text-align: center; }
   .btn-white:hover { background: #e6e7ea; }
 
   .footer { max-width: 1080px; margin: 0 auto; padding: 20px 40px; display: flex; align-items: center; }
@@ -145,7 +145,7 @@
       <a class="hide-m" href="#features">기능</a>
       <a class="hide-m" href="#usecases">활용</a>
       <a class="hide-m" href="#faq">FAQ</a>
-      <button class="btn-primary" style="font-size: 13px; padding: 9px 18px;">Chrome에 추가</button>
+      <a class="btn-primary" style="font-size: 13px; padding: 9px 18px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가</a>
     </div>
   </div>
 </nav>
@@ -154,7 +154,7 @@
   <div style="flex: 1; min-width: 280px;">
     <h1>읽기도 쓰기도,<br>핵심부터<br>또렷하게</h1>
     <p class="lead">어떤 페이지든 글을 선택하면 <b>[요약]·[작성]·[말투]·[번역]</b> 툴바가 뜹니다. 읽는 글은 두괄식 요약으로, 쓰는 글은 상대가 편히 읽는 두괄식으로, 말투는 존댓말↔반말로, 낯선 언어는 그 자리에서 번역까지. 결과는 <b>소리로 읽어주기</b>도 됩니다.</p>
-    <button class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;">Chrome에 추가하기 — 무료</button>
+    <a class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기 — 무료</a>
     <p class="note">회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
   </div>
 
@@ -415,6 +415,10 @@
       <summary>더 똑똑한 AI를 쓰고 싶어요.</summary>
       <div class="ans">옵션 페이지에서 내 <b>OpenAI·Anthropic·Gemini API 키</b>를 입력하면 해당 모델로 전환됩니다. 이 경우 선택한 글이 해당 제공사로 전송되며, 안내에 따라 직접 선택할 수 있어요.</div>
     </details>
+    <details>
+      <summary>개선 의견이나 버그를 알리고 싶어요.</summary>
+      <div class="ans">언제든 <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">qkrxodud00@gmail.com</a> 으로 메일을 보내 주세요. 불편했던 점, 바라는 기능 무엇이든 환영합니다 — <b>하나하나 읽고 반영</b>합니다.</div>
+    </details>
   </div>
 </section>
 
@@ -424,13 +428,15 @@
       <p class="big">읽고, 쓰고, 말투 바꾸고, 번역까지 — 선택 한 번으로</p>
       <p class="sub">무료 · 회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
     </div>
-    <button class="btn-white">Chrome에 추가하기</button>
+    <a class="btn-white" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기</a>
   </div>
 </section>
 
 <footer class="footer">
   <span>© 2026 또렷</span>
   <div class="links">
+    <a href="#faq">자주 묻는 질문</a>
+    <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">의견 보내기</a>
     <a href="privacy.html">개인정보처리방침</a>
   </div>
 </footer>
