@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>또렷 — 요약·작성·말투·번역, 선택 한 번으로 또렷하게</title>
-<meta name="description" content="글을 선택하면 [요약]·[작성]·[말투]·[번역] 툴바가 뜨는 크롬 익스텐션. 두괄식 요약, 두괄식 다시 쓰기, 존댓말↔반말 말투 변환, 온디바이스 번역까지. 결과를 소리로 읽어주는 읽어주기도. 무료, 회원가입 없음, 온디바이스 처리.">
+<title>또렷 — 요약·작성·말투·번역·물어보기, 선택 한 번으로 또렷하게</title>
+<meta name="description" content="글을 선택하면 [요약]·[작성]·[말투]·[번역]·[물어보기] 툴바가 뜨는 크롬 익스텐션. 두괄식 요약, 두괄식 다시 쓰기, 존댓말↔반말 말투 변환, 온디바이스 번역, 선택한 글에 질문·답변까지. 페이지 전체 쉽게 읽기와 소리로 읽어주기도. 무료, 회원가입 없음, 온디바이스 처리.">
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; background: #fff; color: #17181a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
@@ -153,7 +153,7 @@
 <header class="hero">
   <div style="flex: 1; min-width: 280px;">
     <h1>읽기도 쓰기도,<br>핵심부터<br>또렷하게</h1>
-    <p class="lead">어떤 페이지든 글을 선택하면 <b>[요약]·[작성]·[말투]·[번역]</b> 툴바가 뜹니다. 읽는 글은 두괄식 요약으로, 쓰는 글은 상대가 편히 읽는 두괄식으로, 말투는 존댓말↔반말로, 낯선 언어는 그 자리에서 번역까지. 결과는 <b>소리로 읽어주기</b>도 됩니다.</p>
+    <p class="lead">어떤 페이지든 글을 선택하면 <b>[요약]·[작성]·[말투]·[번역]·[물어보기]</b> 툴바가 뜹니다. 읽는 글은 두괄식 요약으로, 쓰는 글은 상대가 편히 읽는 두괄식으로, 말투는 존댓말↔반말로, 낯선 언어는 그 자리에서 번역하고, 궁금한 건 선택한 글에 바로 물어보세요. 선택 없이 <b>페이지 전체</b>도 통째로 쉽게, 결과는 <b>소리로 읽어주기</b>도 됩니다.</p>
     <a class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기 — 무료</a>
     <p class="note">회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
   </div>
@@ -179,6 +179,7 @@
           <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">작성</span>
           <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">말투</span>
           <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">번역</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">물어보기</span>
         </div>
         <div style="position: absolute; top: 146px; left: 176px; pointer-events: none; animation: cursorMove 14s ease-in-out infinite; z-index: 10;">
           <div style="width: 0; height: 0; border-left: 9px solid #17181a; border-right: 5px solid transparent; border-bottom: 16px solid transparent; border-top: 5px solid transparent; transform: rotate(-70deg); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></div>
@@ -245,7 +246,7 @@
 
 <div class="stats">
   <div class="stats-inner">
-    <div class="stat"><div class="big">4<small>가지</small></div><div class="lbl">요약·작성·<br>말투·번역</div></div>
+    <div class="stat"><div class="big">5<small>가지</small></div><div class="lbl">요약·작성·말투·<br>번역·물어보기</div></div>
     <div class="stat"><div class="big">0<small>원</small></div><div class="lbl">평생 무료<br>결제 없음</div></div>
     <div class="stat"><div class="big">100<small>%</small></div><div class="lbl">온디바이스<br>처리</div></div>
     <div class="stat"><div class="big">한·영</div><div class="lbl">두 언어<br>즉시 전환</div></div>
@@ -254,12 +255,12 @@
 </div>
 
 <section class="section" id="features">
-  <h2>선택 한 번, 네 가지 방식으로</h2>
+  <h2>선택 한 번, 다섯 가지 방식으로</h2>
   <div class="grid2">
     <div class="feature">
       <span class="glyph">요</span>
       <h3>요약 — 쉽게 읽기</h3>
-      <p>읽는 글을 선택하면 핵심 결론 한 문장과 요점 목록으로 정리됩니다. <b>짧게·보통·길게</b> 길이를 고르고, 한국어·영어 요약을 전환할 수 있어요.</p>
+      <p>읽는 글을 선택하면 핵심 결론 한 문장과 요점 목록으로 정리됩니다. <b>짧게·보통·길게</b> 길이와 <b>용어 풀이 강도(기본·쉽게·아주 쉽게)</b>를 고르고, 한국어·영어 요약을 전환할 수 있어요.</p>
     </div>
     <div class="feature">
       <span class="glyph">작</span>
@@ -276,8 +277,18 @@
       <h3>번역 — 그 자리에서</h3>
       <p>낯선 언어의 글을 <b>한국어·English</b>로 즉시 번역합니다. Chrome 내장 번역이라 이 역시 <b>기기 안에서</b> 처리돼요.</p>
     </div>
+    <div class="feature">
+      <span class="glyph">물</span>
+      <h3>물어보기 — 선택한 글에 질문</h3>
+      <p>선택한 문단에 대해 궁금한 점을 입력하면 두괄식으로 답해 줍니다. "이게 무슨 뜻이야?"처럼 그 자리에서 바로 물어보세요.</p>
+    </div>
   </div>
   <div class="grid3" style="margin-top: 16px;">
+    <div class="feature">
+      <span class="glyph">📖</span>
+      <h3>페이지 전체 쉽게 읽기</h3>
+      <p>드래그 없이 <b>우클릭 한 번</b>으로 페이지 본문을 통째로 두괄식 요약. 매번 선택하지 않아도 됩니다.</p>
+    </div>
     <div class="feature">
       <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg></span>
       <h3>읽어주기</h3>
@@ -286,7 +297,7 @@
     <div class="feature">
       <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6.5h12M8 12h12M8 17.5h12"/><circle cx="4.2" cy="6.5" r="1.1"/><circle cx="4.2" cy="12" r="1.1"/><circle cx="4.2" cy="17.5" r="1.1"/></svg></span>
       <h3>기록에 자동 저장</h3>
-      <p>결과는 툴바 아이콘의 <b>기록 패널</b>에 날짜별로 쌓입니다. 검색·삭제도 내 브라우저 안에서.</p>
+      <p>결과는 툴바 아이콘의 <b>기록 패널</b>에 날짜별로 쌓입니다. 검색·삭제는 물론 <b>마크다운으로 내보내기</b>까지 내 브라우저 안에서.</p>
     </div>
     <div class="feature">
       <span class="glyph">안</span>
@@ -354,12 +365,12 @@
     <div class="step">
       <span class="num">02</span>
       <h3>글 선택 → 모드 선택</h3>
-      <p>글을 드래그하면 <b>[요약]·[작성]·[말투]·[번역]</b> 툴바가 나타납니다. 지금 필요한 하나를 누르세요.</p>
+      <p>글을 드래그하면 <b>[요약]·[작성]·[말투]·[번역]·[물어보기]</b> 툴바가 나타납니다. 지금 필요한 하나를 누르세요.</p>
     </div>
     <div class="step">
       <span class="num">03</span>
       <h3>확인하고 적용</h3>
-      <p>결과를 읽거나 <b>들어 보고</b>, 작성 결과는 <b>[적용]</b>으로 편집창에 바로 넣으세요. 복사도 한 번에.</p>
+      <p>결과를 읽거나 <b>들어 보고</b>, 작성 결과는 <b>[적용]</b>으로 편집창에 바로 넣으세요. 카드 위 <b>모드 칩</b>으로 같은 글을 다른 모드로 다시 드래그 없이 전환할 수도 있어요.</p>
     </div>
   </div>
 </section>
@@ -393,7 +404,7 @@
   <div class="faq">
     <details open>
       <summary>정말 무료인가요?</summary>
-      <div class="ans">네. 요약·작성·말투·번역·읽어주기·기록까지 <b>모든 기능이 무료</b>입니다. 결제 수단을 등록할 필요도, 사용량 제한도 없습니다.</div>
+      <div class="ans">네. 요약·작성·말투·번역·물어보기·읽어주기·기록까지 <b>모든 기능이 무료</b>입니다. 결제 수단을 등록할 필요도, 사용량 제한도 없습니다.</div>
     </details>
     <details>
       <summary>제 데이터는 어디에 저장되나요?</summary>
@@ -405,7 +416,7 @@
     </details>
     <details>
       <summary>설치가 복잡하지 않나요?</summary>
-      <div class="ans">Chrome 웹 스토어에서 추가하면 끝입니다. 별도 설정 없이, 글을 드래그하면 바로 <b>[요약]·[작성]·[말투]·[번역]</b> 툴바가 떠요. 단축키 <b>Alt+E</b>나 우클릭 메뉴로도 쓸 수 있습니다.</div>
+      <div class="ans">Chrome 웹 스토어에서 추가하면 끝입니다. 별도 설정 없이, 글을 드래그하면 바로 <b>[요약]·[작성]·[말투]·[번역]·[물어보기]</b> 툴바가 떠요. 단축키 <b>Alt+E</b>나 우클릭 메뉴(5모드 선택), 선택 없이 <b>페이지 전체 쉽게 읽기</b>로도 쓸 수 있습니다.</div>
     </details>
     <details>
       <summary>편집창에서 글을 쓸 때도 되나요?</summary>
@@ -425,7 +436,7 @@
 <section class="cta-band">
   <div class="cta-inner">
     <div class="txt">
-      <p class="big">읽고, 쓰고, 말투 바꾸고, 번역까지 — 선택 한 번으로</p>
+      <p class="big">읽고, 쓰고, 말투 바꾸고, 번역하고, 물어보기까지 — 선택 한 번으로</p>
       <p class="sub">무료 · 회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
     </div>
     <a class="btn-white" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기</a>
