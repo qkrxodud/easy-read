@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>또렷 — 요약·작성·말투·번역·물어보기, 선택 한 번으로 또렷하게</title>
-<meta name="description" content="글을 선택하면 [요약]·[작성]·[말투]·[번역]·[물어보기] 툴바가 뜨는 크롬 익스텐션. 두괄식 요약, 두괄식 다시 쓰기, 존댓말↔반말 말투 변환, 온디바이스 번역, 선택한 글에 질문·답변까지. 페이지 전체 쉽게 읽기와 소리로 읽어주기도. 무료, 회원가입 없음, 온디바이스 처리.">
+<title>또렷 — 요약·작성·교정·말투·번역·물어보기, 선택 한 번으로 또렷하게</title>
+<meta name="description" content="글을 선택하면 [요약]·[작성]·[교정]·[말투]·[번역]·[물어보기] 툴바가 뜨는 크롬 익스텐션. 두괄식 요약, 두괄식 다시 쓰기, 맞춤법·문장 교정, 존댓말↔반말 말투 변환, 온디바이스 번역, 선택한 글에 질문·답변까지. 형광펜·단어 뜻풀이, 페이지 전체 쉽게 읽기와 소리로 읽어주기도. 무료, 회원가입 없음, 온디바이스 처리.">
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; background: #fff; color: #17181a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
@@ -107,17 +107,20 @@
   .chip .dot { width: 5px; height: 5px; border-radius: 50%; background: #2a63e8; margin-top: 6px; flex-shrink: 0; }
   .chip span:last-child { font-size: 11px; line-height: 1.55; color: #3a3d42; }
 
+  /* 데모 4단계 흐름: ①선택+툴바(0~20%) ②형광펜 하이라이트+노트(20~44%) ③요약(44~68%) ④기록(68~100%) */
   @keyframes selectLine { 0%, 4% { background: #eff0f2; } 10%, 100% { background: #b9d1f9; } }
-  @keyframes floatBtn { 0%, 9% { opacity: 0; transform: scale(0.6); } 13%, 27% { opacity: 1; transform: scale(1); } 31%, 100% { opacity: 0; transform: scale(0.9); } }
-  @keyframes cursorMove { 0% { transform: translate(130px, 190px); opacity: 0; } 5% { opacity: 1; transform: translate(130px, 190px); } 15%, 17% { transform: translate(0, 0); } 19% { transform: translate(0, 0) scale(0.8); } 21%, 24% { transform: translate(0, 0) scale(1); } 28%, 100% { opacity: 0; transform: translate(0, 0); } }
-  @keyframes popupIn { 0%, 23% { opacity: 0; transform: translateY(14px) scale(0.97); } 28%, 55% { opacity: 1; transform: translateY(0) scale(1); } 60%, 100% { opacity: 0; transform: translateY(-6px) scale(0.98); } }
-  @keyframes p1 { 0%, 30% { opacity: 0; transform: translateY(6px); } 35%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes p2 { 0%, 35% { opacity: 0; transform: translateY(6px); } 40%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes p3 { 0%, 40% { opacity: 0; transform: translateY(6px); } 45%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes histIn { 0%, 60% { opacity: 0; transform: translateX(18px); } 65%, 94% { opacity: 1; transform: translateX(0); } 99%, 100% { opacity: 0; } }
-  @keyframes h1a { 0%, 66% { opacity: 0; transform: translateY(8px); } 71%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes h2a { 0%, 71% { opacity: 0; transform: translateY(8px); } 76%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes h3a { 0%, 76% { opacity: 0; transform: translateY(8px); } 81%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes floatBtn { 0%, 6% { opacity: 0; transform: scale(0.6); } 9%, 16% { opacity: 1; transform: scale(1); } 20%, 100% { opacity: 0; transform: scale(0.9); } }
+  @keyframes cursorMove { 0% { transform: translate(130px, 190px); opacity: 0; } 4% { opacity: 1; transform: translate(130px, 190px); } 11%, 13% { transform: translate(0, 0); } 14% { transform: translate(0, 0) scale(0.8); } 16%, 18% { transform: translate(0, 0) scale(1); } 20%, 100% { opacity: 0; transform: translate(0, 0); } }
+  @keyframes highlightIn { 0%, 20% { opacity: 0; transform: translateY(14px); } 24%, 42% { opacity: 1; transform: translateY(0); } 46%, 100% { opacity: 0; transform: translateY(-6px); } }
+  @keyframes markSweep { 0%, 24% { background-size: 0% 82%; } 33%, 100% { background-size: 100% 82%; } }
+  @keyframes popupIn { 0%, 44% { opacity: 0; transform: translateY(14px) scale(0.97); } 48%, 64% { opacity: 1; transform: translateY(0) scale(1); } 68%, 100% { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+  @keyframes p1 { 0%, 50% { opacity: 0; transform: translateY(6px); } 54%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes p2 { 0%, 54% { opacity: 0; transform: translateY(6px); } 58%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes p3 { 0%, 58% { opacity: 0; transform: translateY(6px); } 62%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes histIn { 0%, 68% { opacity: 0; transform: translateX(18px); } 72%, 96% { opacity: 1; transform: translateX(0); } 99%, 100% { opacity: 0; } }
+  @keyframes h1a { 0%, 74% { opacity: 0; transform: translateY(8px); } 78%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes h2a { 0%, 78% { opacity: 0; transform: translateY(8px); } 82%, 100% { opacity: 1; transform: translateY(0); } }
+  @keyframes h3a { 0%, 82% { opacity: 0; transform: translateY(8px); } 86%, 100% { opacity: 1; transform: translateY(0); } }
 
   @media (max-width: 900px) {
     .hero { flex-direction: column; padding: 48px 24px; gap: 40px; }
@@ -153,7 +156,7 @@
 <header class="hero">
   <div style="flex: 1; min-width: 280px;">
     <h1>읽기도 쓰기도,<br>핵심부터<br>또렷하게</h1>
-    <p class="lead">어떤 페이지든 글을 선택하면 <b>[요약]·[작성]·[말투]·[번역]·[물어보기]</b> 툴바가 뜹니다. 읽는 글은 두괄식 요약으로, 쓰는 글은 상대가 편히 읽는 두괄식으로, 말투는 존댓말↔반말로, 낯선 언어는 그 자리에서 번역하고, 궁금한 건 선택한 글에 바로 물어보세요. 선택 없이 <b>페이지 전체</b>도 통째로 쉽게, 결과는 <b>소리로 읽어주기</b>도 됩니다.</p>
+    <p class="lead">어떤 페이지든 글을 선택하면 <b>[요약]·[작성]·[교정]·[말투]·[번역]·[물어보기]</b> 툴바가 뜹니다. 읽는 글은 두괄식 요약으로, 쓰는 글은 상대가 편히 읽는 두괄식으로, 맞춤법·어색한 문장은 교정으로, 말투는 존댓말↔반말로, 낯선 언어는 그 자리에서 번역하고, 궁금한 건 선택한 글에 바로 물어보세요. 중요한 구절은 <b>형광펜</b>으로, 모르는 단어는 <b>더블클릭</b> 한 번으로 풀이하고, 선택 없이 <b>페이지 전체</b>도 통째로 쉽게, 결과는 <b>소리로 읽어주기</b>도 됩니다.</p>
     <a class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기 — 무료</a>
     <p class="note">회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
   </div>
@@ -174,15 +177,37 @@
         <div style="width: 90%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="width: 84%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="width: 52%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="position: absolute; top: 126px; left: 58px; display: flex; align-items: center; gap: 2px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); border-radius: 999px; padding: 5px 6px; animation: floatBtn 14s ease infinite;">
-          <span style="display: flex; align-items: center; gap: 4px; background: #2a63e8; color: #fff; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; white-space: nowrap;">요약</span>
-          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">작성</span>
-          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">말투</span>
-          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">번역</span>
-          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 11px; font-weight: 700; padding: 5px 8px; white-space: nowrap;">물어보기</span>
+        <div style="position: absolute; top: 126px; left: 20px; display: flex; align-items: center; gap: 1px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); border-radius: 999px; padding: 5px 6px; animation: floatBtn 14s ease infinite;">
+          <span style="display: flex; align-items: center; gap: 4px; background: #2a63e8; color: #fff; font-size: 10.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; white-space: nowrap;">요약</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 10.5px; font-weight: 700; padding: 5px 7px; white-space: nowrap;">작성</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 10.5px; font-weight: 700; padding: 5px 7px; white-space: nowrap;">교정</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 10.5px; font-weight: 700; padding: 5px 7px; white-space: nowrap;">말투</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 10.5px; font-weight: 700; padding: 5px 7px; white-space: nowrap;">번역</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 10.5px; font-weight: 700; padding: 5px 7px; white-space: nowrap;">물어보기</span>
+          <span style="display: flex; align-items: center; gap: 4px; background: #fef3c7; color: #92600a; font-size: 10.5px; font-weight: 700; padding: 5px 8px; border-radius: 999px; white-space: nowrap;">형광펜</span>
         </div>
         <div style="position: absolute; top: 146px; left: 176px; pointer-events: none; animation: cursorMove 14s ease-in-out infinite; z-index: 10;">
           <div style="width: 0; height: 0; border-left: 9px solid #17181a; border-right: 5px solid transparent; border-bottom: 16px solid transparent; border-top: 5px solid transparent; transform: rotate(-70deg); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></div>
+        </div>
+      </div>
+
+      <!-- stage H: 형광펜 하이라이트 + 노트 -->
+      <div class="demo-card" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 16px rgba(42,99,232,0.1); padding: 22px 24px; display: flex; flex-direction: column; gap: 11px; animation: highlightIn 14s ease infinite; opacity: 0;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">또</span>
+          <span style="font-size: 13.5px; font-weight: 700;">형광펜</span>
+          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: #fef3c7; color: #92600a; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#92600a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6.5 16.5l8-8a2 2 0 0 1 3 3l-8 8-4 1z"/></svg>저장됨</span>
+        </div>
+        <div style="width: 210px; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
+        <div style="width: 96%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
+        <div style="line-height: 1.95;">
+          <span style="font-size: 13px; color: #17181a; font-weight: 600; background: linear-gradient(#fde68a, #fde68a) no-repeat; background-size: 0% 82%; background-position: 0 62%; box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 1px 2px; animation: markSweep 14s ease infinite;">칠한 하이라이트는 다시 방문해도 그 자리에 그대로 남아 있어요.</span>
+        </div>
+        <div style="width: 84%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
+        <div style="width: 66%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
+        <div style="margin-top: 6px; display: flex; gap: 8px; align-items: flex-start; background: #f8f9fb; border-left: 3px solid #f0c000; border-radius: 8px; padding: 10px 12px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92600a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;"><path d="M4 5a1 1 0 0 1 1-1h10l5 5v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M14 4v5h5"/><path d="M8 13h7M8 16h5"/></svg>
+          <span style="font-size: 11.5px; line-height: 1.5; color: #3a3d42;">내 메모 — 여기 꼭 다시 확인하기</span>
         </div>
       </div>
 
@@ -246,7 +271,7 @@
 
 <div class="stats">
   <div class="stats-inner">
-    <div class="stat"><div class="big">5<small>가지</small></div><div class="lbl">요약·작성·말투·<br>번역·물어보기</div></div>
+    <div class="stat"><div class="big">6<small>가지</small></div><div class="lbl">요약·작성·교정·<br>말투·번역·물어보기</div></div>
     <div class="stat"><div class="big">0<small>원</small></div><div class="lbl">평생 무료<br>결제 없음</div></div>
     <div class="stat"><div class="big">100<small>%</small></div><div class="lbl">온디바이스<br>처리</div></div>
     <div class="stat"><div class="big">한·영</div><div class="lbl">두 언어<br>즉시 전환</div></div>
@@ -255,7 +280,7 @@
 </div>
 
 <section class="section" id="features">
-  <h2>선택 한 번, 다섯 가지 방식으로</h2>
+  <h2>선택 한 번, 여섯 가지 방식으로</h2>
   <div class="grid2">
     <div class="feature">
       <span class="glyph">요</span>
@@ -266,6 +291,11 @@
       <span class="glyph">작</span>
       <h3>작성 — 두괄식으로 다시 쓰기</h3>
       <p>내가 쓴 초안을 상대가 편히 읽는 두괄식 문장으로 다시 써 줍니다. <b>정중·친근·간결</b> 톤을 고르고, 편집창에서는 <b>[적용]</b>으로 그 자리에 바로 교체돼요.</p>
+    </div>
+    <div class="feature">
+      <span class="glyph">교</span>
+      <h3>교정 — 맞춤법·문장 다듬기</h3>
+      <p>뜻·정보·말투는 그대로 두고 <b>맞춤법·띄어쓰기·조사</b>와 어색하거나 장황한 문장만 매끄럽게 고칩니다. 요약이 아니라, 쓴 글을 그대로 살린 교정이에요.</p>
     </div>
     <div class="feature">
       <span class="glyph">말</span>
@@ -297,7 +327,17 @@
     <div class="feature">
       <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6.5h12M8 12h12M8 17.5h12"/><circle cx="4.2" cy="6.5" r="1.1"/><circle cx="4.2" cy="12" r="1.1"/><circle cx="4.2" cy="17.5" r="1.1"/></svg></span>
       <h3>기록에 자동 저장</h3>
-      <p>결과는 툴바 아이콘의 <b>기록 패널</b>에 날짜별로 쌓입니다. 검색·삭제는 물론 <b>마크다운으로 내보내기</b>까지 내 브라우저 안에서.</p>
+      <p>결과는 툴바 아이콘의 <b>기록 패널</b>에 날짜별로 쌓입니다. 검색·삭제는 물론 노트 앱으로 <b>복사·마크다운 내보내기</b>까지 내 브라우저 안에서.</p>
+    </div>
+    <div class="feature">
+      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6.5 16.5l8-8a2 2 0 0 1 3 3l-8 8-4 1z"/></svg></span>
+      <h3>형광펜 + 노트</h3>
+      <p>중요한 구절을 <b>형광펜</b>으로 칠하고 메모를 답니다. 저장한 하이라이트는 <b>다시 방문해도 그 자리에</b> 다시 표시되고, 사이드패널에서 모아 보거나 내보낼 수 있어요.</p>
+    </div>
+    <div class="feature">
+      <span class="glyph">뜻</span>
+      <h3>단어 뜻풀이</h3>
+      <p>모르는 단어를 <b>더블클릭</b>하면 그 문맥에 맞는 쉬운 뜻을 작은 풍선으로 바로 보여 줍니다. 어려운 한자어·전문 용어도 흐름을 끊지 않고 이해해요.</p>
     </div>
     <div class="feature">
       <span class="glyph">안</span>
@@ -365,7 +405,7 @@
     <div class="step">
       <span class="num">02</span>
       <h3>글 선택 → 모드 선택</h3>
-      <p>글을 드래그하면 <b>[요약]·[작성]·[말투]·[번역]·[물어보기]</b> 툴바가 나타납니다. 지금 필요한 하나를 누르세요.</p>
+      <p>글을 드래그하면 <b>[요약]·[작성]·[교정]·[말투]·[번역]·[물어보기]</b> 툴바가 나타납니다. 지금 필요한 하나를 누르세요.</p>
     </div>
     <div class="step">
       <span class="num">03</span>
@@ -404,7 +444,7 @@
   <div class="faq">
     <details open>
       <summary>정말 무료인가요?</summary>
-      <div class="ans">네. 요약·작성·말투·번역·물어보기·읽어주기·기록까지 <b>모든 기능이 무료</b>입니다. 결제 수단을 등록할 필요도, 사용량 제한도 없습니다.</div>
+      <div class="ans">네. 요약·작성·교정·말투·번역·물어보기·형광펜·읽어주기·기록까지 <b>모든 기능이 무료</b>입니다. 결제 수단을 등록할 필요도, 사용량 제한도 없습니다.</div>
     </details>
     <details>
       <summary>제 데이터는 어디에 저장되나요?</summary>
@@ -416,11 +456,15 @@
     </details>
     <details>
       <summary>설치가 복잡하지 않나요?</summary>
-      <div class="ans">Chrome 웹 스토어에서 추가하면 끝입니다. 별도 설정 없이, 글을 드래그하면 바로 <b>[요약]·[작성]·[말투]·[번역]·[물어보기]</b> 툴바가 떠요. 단축키 <b>Alt+E</b>나 우클릭 메뉴(5모드 선택), 선택 없이 <b>페이지 전체 쉽게 읽기</b>로도 쓸 수 있습니다.</div>
+      <div class="ans">Chrome 웹 스토어에서 추가하면 끝입니다. 별도 설정 없이, 글을 드래그하면 바로 <b>[요약]·[작성]·[교정]·[말투]·[번역]·[물어보기]</b> 툴바가 떠요. 단축키 <b>Alt+E</b>나 우클릭 메뉴(6모드 선택), 선택 없이 <b>페이지 전체 쉽게 읽기</b>로도 쓸 수 있습니다.</div>
     </details>
     <details>
       <summary>편집창에서 글을 쓸 때도 되나요?</summary>
-      <div class="ans">네. 메일·게시글 입력창처럼 편집 가능한 곳에서 초안을 선택하면 두괄식으로 다시 써 주고, <b>[적용]</b>을 누르면 그 자리에 바로 교체됩니다.</div>
+      <div class="ans">네. 메일·게시글 입력창처럼 편집 가능한 곳에서 초안을 선택하면 두괄식으로 다시 써 주고, <b>[적용]</b>을 누르면 그 자리에 바로 교체됩니다. 맞춤법·문장만 다듬고 싶다면 <b>[교정]</b>을 쓰세요.</div>
+    </details>
+    <details>
+      <summary>형광펜이나 단어 뜻풀이도 있나요?</summary>
+      <div class="ans">네. 중요한 구절은 <b>형광펜</b>으로 칠해 저장하면 다시 방문해도 그 자리에 다시 표시되고, 사이드패널에서 모아 보거나 내보낼 수 있어요. 모르는 단어는 <b>더블클릭</b>하면 문맥에 맞는 쉬운 뜻이 작은 풍선으로 바로 떠요.</div>
     </details>
     <details>
       <summary>더 똑똑한 AI를 쓰고 싶어요.</summary>
@@ -436,7 +480,7 @@
 <section class="cta-band">
   <div class="cta-inner">
     <div class="txt">
-      <p class="big">읽고, 쓰고, 말투 바꾸고, 번역하고, 물어보기까지 — 선택 한 번으로</p>
+      <p class="big">읽고, 쓰고, 다듬고, 말투 바꾸고, 번역하고, 물어보기까지 — 선택 한 번으로</p>
       <p class="sub">무료 · 회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
     </div>
     <a class="btn-white" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기</a>
