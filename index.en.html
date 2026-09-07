@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>또렷 — 책갈피·형광펜·기록, 읽은 것이 사라지지 않는 브라우저</title>
-<meta name="description" content="다시 볼 페이지는 책갈피로, 중요한 구절은 형광펜으로, 요약한 내용은 기록으로 — 읽은 것이 사이드패널 한 곳에 쌓이는 크롬 익스텐션. 형광펜은 다시 방문해도 그 자리에 그대로. 폴더·태그 정리, 검색, 읽기 리마인더, 노트 앱 내보내기까지. 무료, 회원가입 없음, 온디바이스 처리.">
+<title>Clarity — Bookmarks, highlights & history: the browser that never forgets what you read</title>
+<meta name="description" content="A Chrome extension where nothing you read gets lost — bookmark pages to revisit, highlight key passages, and let every summary stack up in one side panel. Highlights reappear in place when you return. Folders & tags, search, reading reminders and notes-app export. Free, no sign-up, on-device processing.">
 <link rel="alternate" hreflang="ko" href="index.html">
 <link rel="alternate" hreflang="en" href="index.en.html">
 <style>
@@ -53,7 +53,7 @@
   .footer .links { margin-left: auto; display: flex; gap: 18px; }
   .footer .links a { font-size: 13px; color: #83878d; }
 
-  /* ── 스탯 스트립 ── */
+  /* ── Stats strip ── */
   .stats { border-top: 1px solid #f0f1f3; border-bottom: 1px solid #f0f1f3; background: #fafbfc; }
   .stats-inner { max-width: 1080px; margin: 0 auto; padding: 30px 56px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
   .stat { text-align: center; }
@@ -61,7 +61,7 @@
   .stat .big small { font-size: 15px; font-weight: 700; }
   .stat .lbl { margin-top: 5px; font-size: 12.5px; line-height: 1.4; color: #83878d; }
 
-  /* ── 활용 사례 ── */
+  /* ── Use cases ── */
   .usecase { display: flex; gap: 14px; align-items: flex-start; background: #f5f6f8; border-radius: 16px; padding: 20px 22px; }
   .usecase .ico { flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
   .usecase h3 { margin: 2px 0 5px; font-size: 15.5px; font-weight: 700; }
@@ -81,7 +81,7 @@
   .ba-li { display: flex; gap: 9px; align-items: flex-start; margin-top: 10px; font-size: 13.5px; line-height: 1.6; color: #3a3d42; }
   .ba-li .d { width: 6px; height: 6px; border-radius: 50%; background: #2a63e8; margin-top: 7px; flex-shrink: 0; }
 
-  /* ── 신뢰 밴드 ── */
+  /* ── Trust band ── */
   .trust { background: #eef3fd; }
   .trust-inner { max-width: 1080px; margin: 0 auto; padding: 56px; }
   .trust h2 { margin: 0 0 10px; font-size: 27px; font-weight: 800; letter-spacing: -0.02em; }
@@ -102,7 +102,7 @@
   .faq .ans { padding: 16px 22px 20px; font-size: 14px; line-height: 1.75; color: #55585d; }
   .faq .ans b { color: #3a3d42; }
 
-  /* ── 데모 애니메이션 ── */
+  /* ── Demo animation ── */
   .demo-wrap { flex-shrink: 0; background: linear-gradient(160deg, #eef3fd, #dfe8fa); border-radius: 20px; padding: 28px; }
   .demo-stage { position: relative; width: 350px; height: 470px; }
   .demo-card { position: absolute; inset: 0; border-radius: 22px; }
@@ -110,7 +110,7 @@
   .chip .dot { width: 5px; height: 5px; border-radius: 50%; background: #2a63e8; margin-top: 6px; flex-shrink: 0; }
   .chip span:last-child { font-size: 11px; line-height: 1.55; color: #3a3d42; }
 
-  /* 데모 4단계 흐름: ①선택+툴바(0~20%) ②형광펜 하이라이트+노트(20~44%) ③책갈피 저장(44~68%) ④사이드패널 타임라인(68~100%) */
+  /* Demo flow, 4 stages: 1) select + toolbar (0–20%) 2) highlight + note (20–44%) 3) bookmark save (44–68%) 4) side-panel timeline (68–100%) */
   @keyframes selectLine { 0%, 4% { background: #eff0f2; } 10%, 100% { background: #b9d1f9; } }
   @keyframes floatBtn { 0%, 6% { opacity: 0; transform: scale(0.6); } 9%, 16% { opacity: 1; transform: scale(1); } 20%, 100% { opacity: 0; transform: scale(0.9); } }
   @keyframes cursorMove { 0% { transform: translate(130px, 190px); opacity: 0; } 4% { opacity: 1; transform: translate(130px, 190px); } 11%, 13% { transform: translate(0, 0); } 14% { transform: translate(0, 0) scale(0.8); } 16%, 18% { transform: translate(0, 0) scale(1); } 20%, 100% { opacity: 0; transform: translate(0, 0); } }
@@ -145,31 +145,31 @@
 
 <nav class="nav">
   <div class="nav-inner">
-    <span class="logo-badge">또</span>
-    <span style="font-size: 15px; font-weight: 700;">또렷</span>
+    <span class="logo-badge">C</span>
+    <span style="font-size: 15px; font-weight: 700;">Clarity</span>
     <div class="nav-links">
-      <a class="hide-m" href="#features">기능</a>
-      <a class="hide-m" href="#usecases">활용</a>
+      <a class="hide-m" href="#features">Features</a>
+      <a class="hide-m" href="#usecases">Use cases</a>
       <a class="hide-m" href="#faq">FAQ</a>
-      <a href="index.en.html" title="English page">EN</a>
-      <a class="btn-primary" style="font-size: 13px; padding: 9px 18px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가</a>
+      <a href="index.html" title="한국어 페이지">KO</a>
+      <a class="btn-primary" style="font-size: 13px; padding: 9px 18px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Add to Chrome</a>
     </div>
   </div>
 </nav>
 
 <header class="hero">
   <div style="flex: 1; min-width: 280px;">
-    <h1>읽은 것이<br>사라지지 않는<br>브라우저</h1>
-    <p class="lead">중요한 구절은 <b>형광펜</b>으로 칠하고, 다시 볼 페이지는 <b>책갈피</b>로 저장하세요. 요약한 내용까지 전부 <b>기록</b>으로 쌓여, 사이드패널 한 곳에서 검색하고 폴더·태그로 정리하고 노트 앱으로 내보낼 수 있습니다. 칠해 둔 형광펜은 <b>다시 방문해도 그 자리에 그대로</b>. 필요할 땐 두괄식 <b>AI 요약</b>도 — 전부 내 기기 안에서, 무료로.</p>
-    <a class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기 — 무료</a>
-    <p class="note">회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
+    <h1>The browser<br>that never forgets<br>what you read</h1>
+    <p class="lead">Mark key passages with the <b>highlighter</b> and save pages to revisit as <b>bookmarks</b>. Everything you summarize stacks up in your <b>history</b> too — all in one side panel where you can search it, organize it with folders and tags, and export it to your notes app. Highlights <b>reappear right where you left them</b> when you return. And when you need it, conclusion-first <b>AI summaries</b> — all on your device, for free.</p>
+    <a class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Add to Chrome — Free</a>
+    <p class="note">No sign-up · Your data stays in your browser</p>
   </div>
 
-  <!-- 애니메이션 데모: 선택 → 형광펜 → 책갈피 → 사이드패널 -->
+  <!-- Animated demo: select → highlight → bookmark → side panel -->
   <div class="demo-wrap">
     <div class="demo-stage">
 
-      <!-- stage 1: 글 선택 + 플로팅 툴바(요약·형광펜·책갈피) -->
+      <!-- stage 1: select text + floating toolbar (Summarize / Highlight / Bookmark) -->
       <div class="demo-card" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 16px rgba(42,99,232,0.1); padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
         <div style="width: 220px; height: 17px; border-radius: 5px; background: #e6e7ea; margin-bottom: 8px;"></div>
         <div style="width: 92%; height: 11px; border-radius: 4px; animation: selectLine 14s linear infinite;"></div>
@@ -182,85 +182,85 @@
         <div style="width: 84%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="width: 52%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="position: absolute; top: 126px; left: 20px; display: flex; align-items: center; gap: 1px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); border-radius: 999px; padding: 5px 6px; animation: floatBtn 14s ease infinite;">
-          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 10.5px; font-weight: 700; padding: 5px 9px; white-space: nowrap;">요약</span>
-          <span style="display: flex; align-items: center; gap: 4px; background: #fef3c7; color: #92600a; font-size: 10.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; white-space: nowrap;">형광펜</span>
-          <span style="display: flex; align-items: center; gap: 4px; background: #2a63e8; color: #fff; font-size: 10.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; white-space: nowrap;">책갈피</span>
+          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 10.5px; font-weight: 700; padding: 5px 9px; white-space: nowrap;">Summarize</span>
+          <span style="display: flex; align-items: center; gap: 4px; background: #fef3c7; color: #92600a; font-size: 10.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; white-space: nowrap;">Highlight</span>
+          <span style="display: flex; align-items: center; gap: 4px; background: #2a63e8; color: #fff; font-size: 10.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; white-space: nowrap;">Bookmark</span>
         </div>
         <div style="position: absolute; top: 146px; left: 176px; pointer-events: none; animation: cursorMove 14s ease-in-out infinite; z-index: 10;">
           <div style="width: 0; height: 0; border-left: 9px solid #17181a; border-right: 5px solid transparent; border-bottom: 16px solid transparent; border-top: 5px solid transparent; transform: rotate(-70deg); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></div>
         </div>
       </div>
 
-      <!-- stage 2: 형광펜 하이라이트 + 노트 -->
+      <!-- stage 2: highlighter + note -->
       <div class="demo-card" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 16px rgba(42,99,232,0.1); padding: 22px 24px; display: flex; flex-direction: column; gap: 11px; animation: highlightIn 14s ease infinite; opacity: 0;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">또</span>
-          <span style="font-size: 13.5px; font-weight: 700;">형광펜</span>
-          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: #fef3c7; color: #92600a; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#92600a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6.5 16.5l8-8a2 2 0 0 1 3 3l-8 8-4 1z"/></svg>저장됨</span>
+          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">C</span>
+          <span style="font-size: 13.5px; font-weight: 700;">Highlighter</span>
+          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: #fef3c7; color: #92600a; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#92600a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6.5 16.5l8-8a2 2 0 0 1 3 3l-8 8-4 1z"/></svg>Saved</span>
         </div>
         <div style="width: 210px; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="width: 96%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="line-height: 1.95;">
-          <span style="font-size: 13px; color: #17181a; font-weight: 600; background: linear-gradient(#fde68a, #fde68a) no-repeat; background-size: 0% 82%; background-position: 0 62%; box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 1px 2px; animation: markSweep 14s ease infinite;">칠한 하이라이트는 다시 방문해도 그 자리에 그대로 남아 있어요.</span>
+          <span style="font-size: 13px; color: #17181a; font-weight: 600; background: linear-gradient(#fde68a, #fde68a) no-repeat; background-size: 0% 82%; background-position: 0 62%; box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 1px 2px; animation: markSweep 14s ease infinite;">Highlights stay right where you left them, even after you revisit.</span>
         </div>
         <div style="width: 84%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="width: 66%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
         <div style="margin-top: 6px; display: flex; gap: 8px; align-items: flex-start; background: #f8f9fb; border-left: 3px solid #f0c000; border-radius: 8px; padding: 10px 12px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92600a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;"><path d="M4 5a1 1 0 0 1 1-1h10l5 5v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M14 4v5h5"/><path d="M8 13h7M8 16h5"/></svg>
-          <span style="font-size: 11.5px; line-height: 1.5; color: #3a3d42;">내 메모 — 여기 꼭 다시 확인하기</span>
+          <span style="font-size: 11.5px; line-height: 1.5; color: #3a3d42;">My note — make sure to check this again</span>
         </div>
       </div>
 
-      <!-- stage 3: 책갈피 저장 -->
+      <!-- stage 3: bookmark save -->
       <div class="demo-card" style="background: #f2f2f4; box-shadow: 0 12px 36px rgba(42,99,232,0.2); padding: 15px; display: flex; flex-direction: column; justify-content: center; gap: 9px; animation: popupIn 14s ease infinite; opacity: 0;">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">또</span>
-          <span style="font-size: 14px; font-weight: 700;">책갈피</span>
-          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: #2a63e8; color: #fff; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg>저장됨</span>
+          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">C</span>
+          <span style="font-size: 14px; font-weight: 700;">Bookmark</span>
+          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: #2a63e8; color: #fff; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg>Saved</span>
         </div>
         <div style="background: #fff; border-radius: 14px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); animation: p1 14s ease infinite;">
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
             <span style="width: 16px; height: 16px; border-radius: 4px; background: #e6e7ea; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0;">📰</span>
-            <p style="margin: 0; font-size: 12.5px; font-weight: 700; line-height: 1.5;">[공지] 사내 카페 시즌 이벤트 안내</p>
+            <p style="margin: 0; font-size: 12.5px; font-weight: 700; line-height: 1.5;">[Notice] Office café seasonal event</p>
           </div>
           <p style="margin: 0; font-size: 10.5px; color: #9a9da3;">intra.example.com/notice/1024</p>
         </div>
-        <div class="chip" style="animation: p2 14s ease infinite;"><span class="dot"></span><span>요약 없이 페이지를 그대로 저장 — 선택한 문장이 있으면 함께 담겨요.</span></div>
-        <div class="chip" style="animation: p3 14s ease infinite;"><span class="dot"></span><span>읽을 준비가 되면 사이드패널에서 언제든 다시 열 수 있어요.</span></div>
+        <div class="chip" style="animation: p2 14s ease infinite;"><span class="dot"></span><span>Saves the page as-is, no summary — with your selected sentences included.</span></div>
+        <div class="chip" style="animation: p3 14s ease infinite;"><span class="dot"></span><span>Reopen it anytime from the side panel when you're ready to read.</span></div>
         <div style="display: flex; gap: 6px; margin-top: 2px; animation: p3 14s ease infinite;">
-          <span style="background: #e6e7ea; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px;">📁 회사</span>
-          <span style="background: #e6e7ea; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px;">#이벤트</span>
-          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#55585d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>읽기 알림</span>
+          <span style="background: #e6e7ea; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px;">📁 Work</span>
+          <span style="background: #e6e7ea; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px;">#event</span>
+          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#55585d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Remind me</span>
         </div>
       </div>
 
-      <!-- stage 4: 사이드패널 책갈피 타임라인 -->
+      <!-- stage 4: side-panel bookmark timeline -->
       <div class="demo-card" style="background: #f2f2f4; box-shadow: 0 12px 36px rgba(42,99,232,0.2); padding: 16px; display: flex; flex-direction: column; gap: 10px; animation: histIn 14s ease infinite; opacity: 0;">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">또</span>
-          <span style="font-size: 14px; font-weight: 700;">사이드패널</span>
+          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">C</span>
+          <span style="font-size: 14px; font-weight: 700;">Side panel</span>
         </div>
         <div style="display: flex; background: #e2e3e6; border-radius: 999px; padding: 2px;">
-          <span style="flex: 1; text-align: center; background: #2a63e8; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 0; border-radius: 999px;">책갈피</span>
-          <span style="flex: 1; text-align: center; color: #83878d; font-size: 10px; font-weight: 700; padding: 4px 0;">기록</span>
-          <span style="flex: 1; text-align: center; color: #83878d; font-size: 10px; font-weight: 700; padding: 4px 0;">하이라이트</span>
+          <span style="flex: 1; text-align: center; background: #2a63e8; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 0; border-radius: 999px;">Bookmarks</span>
+          <span style="flex: 1; text-align: center; color: #83878d; font-size: 10px; font-weight: 700; padding: 4px 0;">History</span>
+          <span style="flex: 1; text-align: center; color: #83878d; font-size: 10px; font-weight: 700; padding: 4px 0;">Highlights</span>
         </div>
-        <span style="font-size: 10.5px; font-weight: 700; color: #9a9da3; letter-spacing: 0.03em; padding-left: 2px;">오늘</span>
+        <span style="font-size: 10.5px; font-weight: 700; color: #9a9da3; letter-spacing: 0.03em; padding-left: 2px;">TODAY</span>
         <div style="display: flex; flex-direction: column;">
           <div style="display: flex; align-items: stretch; animation: h1a 14s ease infinite;">
-            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">방금 전</span></div>
+            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">just now</span></div>
             <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
-            <div style="flex: 1; padding-bottom: 8px;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">📰 [공지] 사내 카페 시즌 이벤트 안내</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">intra.example.com · 📁 회사 · #이벤트</p></div></div>
+            <div style="flex: 1; padding-bottom: 8px;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">📰 [Notice] Office café seasonal event</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">intra.example.com · 📁 Work · #event</p></div></div>
           </div>
           <div style="display: flex; align-items: stretch; animation: h2a 14s ease infinite;">
-            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">1시간 전</span></div>
+            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">1 hr ago</span></div>
             <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
-            <div style="flex: 1; padding-bottom: 8px;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">📊 산업 리포트 — 3분기 시장 전망</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">research.example.com · #리서치</p></div></div>
+            <div style="flex: 1; padding-bottom: 8px;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">📊 Industry report — Q3 market outlook</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">research.example.com · #research</p></div></div>
           </div>
           <div style="display: flex; align-items: stretch; animation: h3a 14s ease infinite;">
-            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">어제</span></div>
+            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">yesterday</span></div>
             <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
-            <div style="flex: 1;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">✍️ 블로그 — 글 잘 쓰는 법 12가지</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">blog.example.com · 📁 공부</p></div></div>
+            <div style="flex: 1;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">✍️ Blog — 12 ways to write better</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">blog.example.com · 📁 Study</p></div></div>
           </div>
         </div>
       </div>
@@ -271,203 +271,203 @@
 
 <div class="stats">
   <div class="stats-inner">
-    <div class="stat"><div class="big">1<small>클릭</small></div><div class="lbl">드래그 한 번이면<br>형광펜·책갈피 저장</div></div>
-    <div class="stat"><div class="big">3<small>탭</small></div><div class="lbl">책갈피·기록·<br>하이라이트</div></div>
-    <div class="stat"><div class="big">100<small>%</small></div><div class="lbl">온디바이스<br>처리·저장</div></div>
-    <div class="stat"><div class="big">0<small>원</small></div><div class="lbl">평생 무료<br>결제 없음</div></div>
-    <div class="stat"><div class="big">0<small>건</small></div><div class="lbl">회원가입·<br>API 키</div></div>
+    <div class="stat"><div class="big">1<small> click</small></div><div class="lbl">One drag saves a<br>highlight or bookmark</div></div>
+    <div class="stat"><div class="big">3<small> tabs</small></div><div class="lbl">Bookmarks · History ·<br>Highlights</div></div>
+    <div class="stat"><div class="big">100<small>%</small></div><div class="lbl">On-device<br>processing &amp; storage</div></div>
+    <div class="stat"><div class="big">$0</div><div class="lbl">Free forever<br>No payments</div></div>
+    <div class="stat"><div class="big">0</div><div class="lbl">Sign-ups ·<br>API keys required</div></div>
   </div>
 </div>
 
 <section class="section" id="features">
-  <h2>핵심은 셋 — 책갈피 · 형광펜 · 기록</h2>
+  <h2>Three things at the core — Bookmarks · Highlighter · History</h2>
   <div class="grid3">
     <div class="feature feature-core">
       <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg></span>
-      <h3>책갈피 — 일단 저장</h3>
-      <p>다시 볼 페이지를 <b>요약 없이 그대로</b> 저장합니다. 글을 선택했다면 그 문장까지 함께. 툴바 버튼이나 <b>우클릭 한 번</b>이면 끝이라, 읽던 흐름이 끊기지 않아요.</p>
+      <h3>Bookmarks — save it for later</h3>
+      <p>Save pages to revisit <b>as-is, no summary</b> — with your selected sentences included. One toolbar button or <b>a single right-click</b>, so your reading flow never breaks.</p>
     </div>
     <div class="feature feature-core">
       <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6.5 16.5l8-8a2 2 0 0 1 3 3l-8 8-4 1z"/></svg></span>
-      <h3>형광펜 — 그 자리에 그대로</h3>
-      <p>중요한 구절을 형광펜으로 칠하고 <b>메모</b>를 답니다. 저장한 하이라이트는 <b>다시 방문해도 같은 자리에</b> 다시 표시되고, 사이드패널에 기사별로 모여요.</p>
+      <h3>Highlighter — stays right there</h3>
+      <p>Mark key passages and attach <b>notes</b>. Saved highlights <b>reappear in the same spot</b> when you revisit the page, and they're gathered by article in the side panel.</p>
     </div>
     <div class="feature feature-core">
       <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6.5h12M8 12h12M8 17.5h12"/><circle cx="4.2" cy="6.5" r="1.1"/><circle cx="4.2" cy="12" r="1.1"/><circle cx="4.2" cy="17.5" r="1.1"/></svg></span>
-      <h3>기록 — 자동으로 쌓이는</h3>
-      <p>요약한 결과는 따로 저장하지 않아도 <b>날짜별 타임라인</b>에 자동으로 쌓입니다. 사이트 파비콘과 함께 <b>검색</b> 한 번이면 "그때 그 글"을 바로 다시 찾아요.</p>
+      <h3>History — builds itself</h3>
+      <p>Every summary you run lands in a <b>date-grouped timeline</b> automatically — no saving required. With site favicons and <b>search</b>, "that article from last week" is one query away.</p>
     </div>
   </div>
-  <h2 style="margin-top: 56px;">모아둔 것을 더 쓸모 있게</h2>
+  <h2 style="margin-top: 56px;">Make everything you've saved more useful</h2>
   <div class="grid2">
     <div class="feature">
       <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></svg></span>
-      <h3>폴더 + 태그로 정리</h3>
-      <p>책갈피·기록·하이라이트 어디에든 <b>📁 폴더</b> 하나와 <b>#태그</b> 여러 개를 붙일 수 있습니다. 폴더·태그·검색을 조합해 쌓인 것들 속에서 원하는 것만 걸러 보세요.</p>
+      <h3>Organize with folders + tags</h3>
+      <p>Attach one <b>📁 folder</b> and any number of <b>#tags</b> to bookmarks, history entries and highlights. Combine folders, tags and search to pull out exactly what you need.</p>
     </div>
     <div class="feature">
       <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>
-      <h3>읽기 리마인더</h3>
-      <p>"나중에 읽어야지" 하고 잊지 않도록, 저장한 항목에 <b>읽을 시각</b>을 걸어 두세요. 시간이 되면 <b>알림과 화면 카드</b>로 알려 주고, 매일·매주 반복이나 10분 미루기도 됩니다.</p>
+      <h3>Reading reminders</h3>
+      <p>So "I'll read it later" doesn't become never — set a <b>reading time</b> on any saved item. When it's due you get a <b>notification and an on-page card</b>, with daily/weekly repeats and 10-minute snooze.</p>
     </div>
     <div class="feature">
       <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4.5 19.5h15"/></svg></span>
-      <h3>노트 앱으로 내보내기</h3>
-      <p>모아둔 책갈피·기록·하이라이트를 <b>마크다운</b>으로 다운로드하거나 <b>클립보드로 복사</b>해 노션·옵시디언에 그대로 붙여 넣으세요. 지금 보이는 필터 그대로 내보내집니다.</p>
+      <h3>Export to your notes app</h3>
+      <p>Download your bookmarks, history and highlights as <b>Markdown</b> or <b>copy them to the clipboard</b> and paste straight into Notion or Obsidian. What you see filtered is what gets exported.</p>
     </div>
     <div class="feature">
       <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></span>
-      <h3>본문까지 뒤지는 검색</h3>
-      <p>책갈피는 <b>본문 스냅샷</b>까지 저장돼 제목이 기억나지 않아도 내용으로 찾습니다. <b>초성 검색</b>과 <b>오타 허용</b>에, 매치된 문장은 발췌·형광 표시로 바로 보여요.</p>
+      <h3>Search that reads the full text</h3>
+      <p>Bookmarks store a <b>text snapshot</b> of the page, so you can find things by content even when the title escapes you. With <b>typo tolerance</b>, and matched sentences shown as highlighted excerpts.</p>
     </div>
   </div>
-  <h2 style="margin-top: 56px;">필요할 땐, 읽기를 돕는 AI</h2>
+  <h2 style="margin-top: 56px;">And when you need it — AI that helps you read</h2>
   <div class="grid3">
     <div class="feature">
-      <span class="glyph">요</span>
-      <h3>두괄식 요약</h3>
-      <p>긴 글을 선택하면 <b>결론 한 문장 + 요점 목록</b>으로 정리해 줍니다. 선택 없이 <b>우클릭 한 번</b>이면 페이지 전체도 통째로. 결과는 기록에 자동 저장돼요.</p>
+      <span class="glyph">S</span>
+      <h3>Conclusion-first summaries</h3>
+      <p>Select a long read and get <b>one conclusion sentence + key points</b>. No selection? <b>One right-click</b> summarizes the whole page. Results save to history automatically.</p>
     </div>
     <div class="feature">
       <span class="glyph">✎</span>
-      <h3>우클릭 6모드</h3>
-      <p>우클릭 메뉴에서 <b>요약·작성·교정·말투·번역·물어보기</b>를 골라 쓸 수 있습니다. 두괄식 다시 쓰기, 맞춤법 교정, 존댓말↔반말, 온디바이스 번역, 선택한 글에 질문까지.</p>
+      <h3>Six modes on right-click</h3>
+      <p>The right-click menu offers <b>Summarize · Write · Proofread · Tone · Translate · Ask</b>: point-first rewriting, grammar fixes, formal↔casual tone, on-device translation, and questions about any passage.</p>
     </div>
     <div class="feature">
-      <span class="glyph">뜻</span>
-      <h3>단어 뜻풀이 · 읽어주기</h3>
-      <p>모르는 단어는 <b>더블클릭</b>하면 문맥에 맞는 쉬운 뜻이 작은 풍선으로 떠요. 요약·번역 결과는 <b>소리로 읽어주기</b>도 됩니다.</p>
+      <span class="glyph">Aa</span>
+      <h3>Word definitions · Read aloud</h3>
+      <p><b>Double-click</b> any unfamiliar word for a context-aware plain definition in a small popover. Summaries and translations can also be <b>read out loud</b>.</p>
     </div>
   </div>
 </section>
 
 <section class="section" id="usecases" style="padding-top: 8px;">
-  <h2>이럴 때 특히 든든합니다</h2>
+  <h2>Where it really earns its keep</h2>
   <div class="grid3">
     <div class="usecase">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></span>
-      <div><h3>자료 조사·리서치</h3><p>근거가 되는 구절마다 형광펜과 메모를 남기고 폴더로 묶으세요. 흩어진 출처가 한 패널에 모입니다.</p></div>
+      <div><h3>Research</h3><p>Highlight and annotate every supporting passage, then group them in folders. Scattered sources come together in one panel.</p></div>
     </div>
     <div class="usecase">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg></span>
-      <div><h3>"나중에 읽어야지"</h3><p>지금 못 읽는 글은 책갈피로 저장하고 읽기 리마인더를 걸어 두세요. 잊을 때쯤 알림이 옵니다.</p></div>
+      <div><h3>"I'll read it later"</h3><p>Bookmark what you can't read now and set a reading reminder. It pings you right about when you'd have forgotten.</p></div>
     </div>
     <div class="usecase">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 0 1 2-2h13.5v14H6.5a2.5 2.5 0 0 0-2.5 2.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H19.5v-4"/></svg></span>
-      <div><h3>공부·학습</h3><p>강의 자료·아티클에 형광펜과 메모를 남기고 폴더·태그로 과목별로 정리하세요. 마크다운으로 내보내 복습 노트까지.</p></div>
+      <div><h3>Studying</h3><p>Highlight and annotate lecture materials and articles, organize by subject with folders and tags, then export to Markdown for revision notes.</p></div>
     </div>
     <div class="usecase">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="13.5" height="15" rx="1.5"/><path d="M16.5 8H20v9.5a2 2 0 0 1-2 2"/><path d="M6 8.5h7M6 11.5h7M6 14.5h4.5"/></svg></span>
-      <div><h3>긴 뉴스·아티클</h3><p>스크롤이 끝없는 기사는 두괄식 요약으로 핵심부터. 요약 결과는 기록에 자동으로 남아 다시 찾기 쉬워요.</p></div>
+      <div><h3>Long news &amp; articles</h3><p>Endless-scroll pieces get a conclusion-first summary. The result stays in your history, easy to find again.</p></div>
     </div>
     <div class="usecase">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6.5h12M8 12h12M8 17.5h12"/><circle cx="4.2" cy="6.5" r="1.1"/><circle cx="4.2" cy="12" r="1.1"/><circle cx="4.2" cy="17.5" r="1.1"/></svg></span>
-      <div><h3>"그거 어디서 봤더라"</h3><p>기억은 흐려져도 기록은 남습니다. 검색·폴더·태그·파비콘으로 지난주에 본 그 글을 몇 초 만에.</p></div>
+      <div><h3>"Where did I see that?"</h3><p>Memory fades; your history doesn't. Search, folders, tags and favicons find last week's article in seconds.</p></div>
     </div>
     <div class="usecase">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4.5 19.5h15"/></svg></span>
-      <div><h3>노션·옵시디언 사용자</h3><p>웹에서 모은 것을 마크다운으로 복사해 내 노트 앱에 그대로. 정리 체계를 옮길 필요가 없어요.</p></div>
+      <div><h3>Notion &amp; Obsidian users</h3><p>Copy what you've collected on the web as Markdown, straight into your notes app. No need to rebuild your system.</p></div>
     </div>
   </div>
 </section>
 
 <section class="section" style="padding-top: 8px;">
-  <h2>흩어져 사라지던 읽기가, 이렇게 모입니다</h2>
+  <h2>Reading that used to scatter and vanish, gathered</h2>
   <div class="ba">
     <div class="ba-col ba-before">
-      <span class="ba-tag">지금까지는</span>
-      <p class="body">열어 둔 탭 서른 개, "나에게 보내기"로 쌓인 링크, 캡처 폴더 속 스크린샷… 분명 중요해서 남겼는데, 정작 필요할 때는 <b>어디에 뒀는지 기억나지 않습니다.</b> 다시 찾다 지쳐 포기한 글이 몇 개인가요.</p>
+      <span class="ba-tag">UNTIL NOW</span>
+      <p class="body">Thirty open tabs, links sent to yourself, screenshots buried in a folder… You saved them because they mattered, but when you actually need one, <b>you can't remember where you put it.</b> How many articles have you given up looking for?</p>
     </div>
     <div class="ba-arrow">→</div>
     <div class="ba-col ba-after">
-      <span class="ba-tag">또렷에서는</span>
-      <p class="ba-concl">책갈피·형광펜·기록이 사이드패널 한 곳에 모입니다.</p>
-      <div class="ba-li"><span class="d"></span><span>다시 방문하면 형광펜이 그 자리에 그대로</span></div>
-      <div class="ba-li"><span class="d"></span><span>날짜 타임라인 · 검색 · 폴더 · 태그로 몇 초 만에 다시 찾기</span></div>
-      <div class="ba-li"><span class="d"></span><span>마크다운으로 노트 앱에 내보내기까지</span></div>
+      <span class="ba-tag">WITH CLARITY</span>
+      <p class="ba-concl">Bookmarks, highlights and history live in one side panel.</p>
+      <div class="ba-li"><span class="d"></span><span>Revisit a page and your highlights are right where you left them</span></div>
+      <div class="ba-li"><span class="d"></span><span>Date timeline · search · folders · tags find it again in seconds</span></div>
+      <div class="ba-li"><span class="d"></span><span>Export to your notes app as Markdown</span></div>
     </div>
   </div>
 </section>
 
 <section class="section" style="padding-top: 8px;">
-  <h2>사용 방법은 세 단계면 끝</h2>
+  <h2>Up and running in three steps</h2>
   <div class="grid3">
     <div class="step">
       <span class="num">01</span>
-      <h3>익스텐션 설치</h3>
-      <p>Chrome 웹 스토어에서 추가하면 준비 끝. 별도 설정이 필요 없습니다.</p>
+      <h3>Install the extension</h3>
+      <p>Add it from the Chrome Web Store and you're done. No setup required.</p>
     </div>
     <div class="step">
       <span class="num">02</span>
-      <h3>글 선택 → 칠하거나 저장</h3>
-      <p>글을 드래그하면 <b>[요약]·[형광펜]·[책갈피]</b> 툴바가 나타납니다. 칠하고, 저장하고, 필요하면 요약하세요. 우클릭 메뉴로 6가지 AI 모드도 쓸 수 있어요.</p>
+      <h3>Select text → mark or save</h3>
+      <p>Drag over any text and the <b>[Summarize] · [Highlight] · [Bookmark]</b> toolbar appears. Highlight it, save it, or summarize it. Six AI modes are also available from the right-click menu.</p>
     </div>
     <div class="step">
       <span class="num">03</span>
-      <h3>사이드패널에서 다시 찾기</h3>
-      <p>툴바 아이콘을 누르면 <b>책갈피·기록·하이라이트</b> 3탭 패널이 열립니다. 검색하고, 폴더·태그로 정리하고, 리마인더를 걸고, 노트 앱으로 내보내세요.</p>
+      <h3>Find it again in the side panel</h3>
+      <p>Click the toolbar icon to open the <b>Bookmarks · History · Highlights</b> panel. Search, organize with folders and tags, set reminders, and export to your notes app.</p>
     </div>
   </div>
 </section>
 
 <section class="trust">
   <div class="trust-inner">
-    <h2>내가 읽은 것은 내 브라우저를 떠나지 않습니다</h2>
-    <p class="sub">책갈피·형광펜·기록은 전부 <b>내 컴퓨터의 브라우저 저장소</b>에만 저장되고, AI 요약도 기본은 Chrome 내장 AI로 <b>기기 안에서</b> 처리합니다. 외부 서버도, 로그인도 없어요.</p>
+    <h2>What you read never leaves your browser</h2>
+    <p class="sub">Bookmarks, highlights and history are stored only in <b>your computer's browser storage</b>, and AI summaries run by default on Chrome's built-in AI, <b>on your device</b>. No external servers, no login.</p>
     <div class="trust-grid">
       <div class="trust-card">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><circle cx="12" cy="15" r="1.2"/></svg></div>
-        <h3>저장도 처리도 로컬</h3>
-        <p>회사 문서에 칠한 형광펜도, 개인 메일 요약도 밖으로 나가지 않습니다. 삭제·관리 전부 내 손에.</p>
+        <h3>Local storage, local processing</h3>
+        <p>Highlights on work documents and summaries of personal email never leave your machine. Deleting and managing them is entirely in your hands.</p>
       </div>
       <div class="trust-card">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="4.5" rx="1.2"/><path d="M5 13v7.5h14V13"/><path d="M12 8.5V20.5"/><path d="M12 8.5C9.8 8.5 7.5 8 7.5 6A2.3 2.3 0 0 1 12 5.5a2.3 2.3 0 0 1 4.5.5c0 2-2.3 2.5-4.5 2.5z"/></svg></div>
-        <h3>평생 무료</h3>
-        <p>구독도, 광고도, 사용량 제한도 없습니다. 설치하는 순간 모든 기능을 그대로 쓸 수 있어요.</p>
+        <h3>Free forever</h3>
+        <p>No subscriptions, no ads, no usage caps. Every feature is yours the moment you install.</p>
       </div>
       <div class="trust-card">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v6M6 14v6M12 4v8M12 16v4M18 4v2M18 10v10"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="14" r="2"/><circle cx="18" cy="8" r="2"/></svg></div>
-        <h3>원하면 더 강력하게</h3>
-        <p>옵션에서 내 OpenAI·Anthropic·Gemini API 키를 넣어 AI 기능을 더 큰 모델로 바꿀 수도 있어요. 선택은 자유.</p>
+        <h3>More power if you want it</h3>
+        <p>Optionally add your own OpenAI, Anthropic or Gemini API key in the options to run the AI features on a larger model. Entirely your choice.</p>
       </div>
     </div>
   </div>
 </section>
 
 <section class="section" id="faq">
-  <h2>자주 묻는 질문</h2>
+  <h2>Frequently asked questions</h2>
   <div class="faq">
     <details open>
-      <summary>정말 무료인가요?</summary>
-      <div class="ans">네. 책갈피·형광펜·기록·리마인더·요약·내보내기까지 <b>모든 기능이 무료</b>입니다. 결제 수단을 등록할 필요도, 사용량 제한도 없습니다.</div>
+      <summary>Is it really free?</summary>
+      <div class="ans">Yes. Bookmarks, the highlighter, history, reminders, summaries and export — <b>every feature is free</b>. No payment method to register, no usage limits.</div>
     </details>
     <details>
-      <summary>제 데이터는 어디에 저장되나요?</summary>
-      <div class="ans">책갈피·형광펜·기록은 전부 <b>내 컴퓨터의 브라우저 저장소</b>에만 쌓입니다. AI 요약도 기본 설정에서는 선택한 글이 외부로 전송되지 않고 기기 안에서 처리돼요. 검색·삭제도 직접 관리합니다.</div>
+      <summary>Where is my data stored?</summary>
+      <div class="ans">Bookmarks, highlights and history all live only in <b>your computer's browser storage</b>. With the default settings, AI summaries are processed on your device too — selected text is never sent anywhere. You search and delete everything yourself.</div>
     </details>
     <details>
-      <summary>형광펜은 다시 방문해도 남아 있나요?</summary>
-      <div class="ans">네. 칠해 둔 하이라이트는 같은 페이지를 다시 열면 <b>같은 자리에 다시 표시</b>됩니다. 메모도 함께 남고, 사이드패널에서 기사별로 모아 보거나 지울 수 있어요.</div>
+      <summary>Do highlights survive when I revisit a page?</summary>
+      <div class="ans">Yes. Reopen the same page and your highlights are <b>redrawn in the same spot</b>. Notes stay attached, and the side panel gathers them by article where you can browse or delete them.</div>
     </details>
     <details>
-      <summary>책갈피와 기록은 뭐가 다른가요?</summary>
-      <div class="ans"><b>책갈피</b>는 요약 없이 페이지(와 선택한 문장)를 그대로 저장하는 "나중에 읽기"입니다. <b>기록</b>은 AI 요약을 쓸 때마다 결과가 자동으로 쌓이는 타임라인이에요. 여기에 <b>하이라이트</b>(형광펜+메모)까지, 사이드패널 3개 탭으로 나뉘어 정리됩니다.</div>
+      <summary>What's the difference between bookmarks and history?</summary>
+      <div class="ans"><b>Bookmarks</b> save a page (and any selected sentences) as-is, no summary — your "read it later" list. <b>History</b> is the timeline that fills up automatically every time you run an AI summary. Together with <b>Highlights</b> (highlighter + notes), they make up the side panel's three tabs.</div>
     </details>
     <details>
-      <summary>저장한 걸 노트 앱으로 옮길 수 있나요?</summary>
-      <div class="ans">네. 각 탭에서 <b>마크다운 파일 다운로드</b> 또는 <b>클립보드 복사</b>를 눌러 노션·옵시디언 등에 그대로 붙여 넣을 수 있습니다. 검색·폴더·태그로 걸러 둔 상태라면, 지금 보이는 목록 그대로 내보내져요.</div>
+      <summary>Can I move what I've saved into my notes app?</summary>
+      <div class="ans">Yes. In every tab you can <b>download a Markdown file</b> or <b>copy to the clipboard</b>, then paste into Notion, Obsidian and the like. If you've filtered by search, folder or tag, exactly what's shown is what gets exported.</div>
     </details>
     <details>
-      <summary>AI 기능은 뭐가 있나요?</summary>
-      <div class="ans">글을 선택하면 <b>두괄식 요약</b>(선택 없이 우클릭하면 페이지 전체), 우클릭 메뉴에서 <b>작성·교정·말투·번역·물어보기</b>, 단어 <b>더블클릭 뜻풀이</b>, 결과 <b>읽어주기</b>를 쓸 수 있습니다. 자주 쓰는 모드는 옵션에서 툴바에 추가할 수도 있어요.</div>
+      <summary>What AI features are there?</summary>
+      <div class="ans">Select text for a <b>conclusion-first summary</b> (or right-click with nothing selected to summarize the whole page), and use <b>Write · Proofread · Tone · Translate · Ask</b> from the right-click menu. There's also <b>double-click word definitions</b> and <b>read-aloud</b> for results. Your favorite modes can be added to the toolbar in the options.</div>
     </details>
     <details>
-      <summary>더 똑똑한 AI를 쓰고 싶어요.</summary>
-      <div class="ans">옵션 페이지에서 내 <b>OpenAI·Anthropic·Gemini API 키</b>를 입력하면 해당 모델로 전환됩니다. 이 경우 선택한 글이 해당 제공사로 전송되며, 안내에 따라 직접 선택할 수 있어요. 책갈피·형광펜·기록 저장은 이때도 내 브라우저에만 남습니다.</div>
+      <summary>I want a smarter AI.</summary>
+      <div class="ans">Enter your own <b>OpenAI, Anthropic or Gemini API key</b> on the options page to switch to that model. In that case selected text is sent to that provider — clearly explained, and entirely opt-in. Bookmarks, highlights and history still stay in your browser.</div>
     </details>
     <details>
-      <summary>개선 의견이나 버그를 알리고 싶어요.</summary>
-      <div class="ans">언제든 <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">qkrxodud00@gmail.com</a> 으로 메일을 보내 주세요. 불편했던 점, 바라는 기능 무엇이든 환영합니다 — <b>하나하나 읽고 반영</b>합니다.</div>
+      <summary>I'd like to report a bug or suggest an improvement.</summary>
+      <div class="ans">Email us anytime at <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">qkrxodud00@gmail.com</a>. Anything is welcome — pain points, feature wishes — <b>we read and act on every message</b>.</div>
     </details>
   </div>
 </section>
@@ -475,20 +475,20 @@
 <section class="cta-band">
   <div class="cta-inner">
     <div class="txt">
-      <p class="big">칠하고, 저장하고, 다시 찾기까지 — 클릭 한 번으로</p>
-      <p class="sub">무료 · 회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
+      <p class="big">Highlight it, save it, find it again — in one click</p>
+      <p class="sub">Free · No sign-up · Your data stays in your browser</p>
     </div>
-    <a class="btn-white" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기</a>
+    <a class="btn-white" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Add to Chrome</a>
   </div>
 </section>
 
 <footer class="footer">
-  <span>© 2026 또렷</span>
+  <span>© 2026 Clarity</span>
   <div class="links">
-    <a href="#faq">자주 묻는 질문</a>
-    <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">의견 보내기</a>
-    <a href="privacy.html">개인정보처리방침</a>
-    <a href="index.en.html">English</a>
+    <a href="#faq">FAQ</a>
+    <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">Send feedback</a>
+    <a href="privacy.en.html">Privacy Policy</a>
+    <a href="index.html">한국어</a>
   </div>
 </footer>
 
