@@ -2,495 +2,344 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clarity — Bookmarks, highlights & history: the browser that never forgets what you read</title>
-<meta name="description" content="A Chrome extension where nothing you read gets lost — bookmark pages to revisit, highlight key passages, and let every summary stack up in one side panel. Highlights reappear in place when you return. Folders & tags, search, reading reminders and notes-app export. Free, no sign-up, on-device processing.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ttoryeot — Bookmarks, highlighter, records: the browser where reading never fades</title>
+<meta name="description" content="Save pages as bookmarks, mark key passages with a highlighter, and let every summary stack up as records — all in one Chrome side panel. Highlights reappear right where you left them. Folders & tags, full-text search, reading reminders, Markdown export. Free, no sign-up, on-device.">
 <link rel="alternate" hreflang="ko" href="index.html">
 <link rel="alternate" hreflang="en" href="index.en.html">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
+  /* Static implementation of the "또렷 랜딩 v2 EN" design (claude.ai/design) — dark + yellow accent. */
+  :root { --accent: #F2E75C; }
   * { box-sizing: border-box; }
-  body { margin: 0; background: #fff; color: #17181a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
-  a { color: #2a63e8; text-decoration: none; }
-  a:hover { color: #1e4db8; }
+  /* 리빌 초기 translateX(±48px)가 뷰포트 밖으로 튀며 가로 스크롤을 만든다 — clip은
+     hidden과 달리 스크롤 컨테이너를 만들지 않아 sticky 내비게이션이 깨지지 않는다. */
+  html, body { overflow-x: clip; }
+  body { margin: 0; background: #0B0B0C; color: #EDEDEA; font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #EDEDEA; text-decoration: none; }
+  a:hover { color: var(--accent); }
 
-  .nav { border-bottom: 1px solid #f0f1f3; position: sticky; top: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); z-index: 50; }
-  .nav-inner { max-width: 1080px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 16px 56px; }
-  .logo-badge { width: 28px; height: 28px; border-radius: 8px; background: #2a63e8; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-  .nav-links { margin-left: auto; display: flex; align-items: center; gap: 22px; }
-  .nav-links a { font-size: 14px; color: #55585d; }
-  .btn-primary, .btn-primary:visited, .btn-primary:hover, .btn-primary:focus { border: none; background: #2a63e8; color: #fff; font-weight: 700; border-radius: 999px; cursor: pointer; display: inline-block; text-decoration: none; text-align: center; }
-  .btn-primary:hover { background: #1e4db8; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes marqueeR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  @keyframes wordIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes floatY { 0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); } 50% { transform: translateY(-14px) rotate(var(--r, 0deg)); } }
+  @keyframes glowPulse { 0%, 100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
 
-  .hero { display: flex; align-items: center; gap: 56px; padding: 72px 56px; max-width: 1080px; margin: 0 auto; }
-  .hero h1 { margin: 0 0 18px; font-size: 46px; font-weight: 800; line-height: 1.28; letter-spacing: -0.03em; text-wrap: pretty; }
-  .hero p.lead { margin: 0 0 30px; font-size: 17px; line-height: 1.7; color: #55585d; text-wrap: pretty; }
-  .hero .note { margin: 12px 0 0; font-size: 13px; color: #9a9da3; }
+  .nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; background: rgba(11,11,12,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #1D1D20; }
+  .nav-brand { display: flex; align-items: center; gap: 10px; }
+  .logo-badge { width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: #0B0B0C; display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+  .nav-name { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; }
+  .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+  .nav-links a { color: #A6A6A0; }
+  .nav-links a:hover { color: var(--accent); }
+  .btn-nav, .btn-nav:hover { background: #EDEDEA; color: #0B0B0C; padding: 9px 18px; border-radius: 99px; font-weight: 700; }
 
-  .section { max-width: 1080px; margin: 0 auto; padding: 56px; }
-  .section h2 { margin: 0 0 32px; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
-  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .feature { background: #f5f6f8; border-radius: 18px; padding: 26px 24px; }
-  .feature .glyph { width: 40px; height: 40px; border-radius: 12px; background: #fff; color: #2a63e8; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-  .feature h3 { margin: 0 0 8px; font-size: 17px; font-weight: 700; }
-  .feature p { margin: 0; font-size: 14px; line-height: 1.65; color: #55585d; }
-  .feature-core { background: #eef3fd; border: 1px solid #d9e4fb; }
-  .step { border: 1px solid #eceef1; border-radius: 16px; padding: 24px; }
-  .step .num { font-size: 13px; font-weight: 800; color: #2a63e8; }
-  .step h3 { margin: 10px 0 8px; font-size: 16.5px; font-weight: 700; }
-  .step p { margin: 0; font-size: 14px; line-height: 1.65; color: #55585d; }
+  .hero { position: relative; max-width: 1100px; margin: 0 auto; padding: 110px 32px 80px; text-align: center; }
+  .hero-glow { position: absolute; inset: -120px 0 auto 0; height: 560px; background: radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%); pointer-events: none; animation: glowPulse 6s ease-in-out infinite; }
+  .float-card { position: absolute; animation: floatY 6s ease-in-out infinite; background: #131315; border: 1px solid #2A2A2E; border-radius: 14px; padding: 14px 18px; text-align: left; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+  .float-card .fc-head { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+  .float-card .fc-badge { width: 18px; height: 18px; border-radius: 5px; background: var(--accent); color: #0B0B0C; display: grid; place-items: center; font-size: 11px; font-weight: 800; }
+  .float-card .fc-body { margin-top: 8px; font-size: 12.5px; color: #A6A6A0; }
+  .float-card .fc-mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: #EDEDEA; padding: 1px 4px; border-radius: 3px; }
+  @media (max-width: 1180px) { .float-card { display: none; } }
 
-  .cta-band { background: #17181a; }
-  .cta-inner { max-width: 1080px; margin: 0 auto; padding: 52px 56px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
-  .cta-inner .txt { flex: 1; min-width: 260px; }
-  .cta-inner p.big { margin: 0 0 6px; font-size: 25px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
-  .cta-inner p.sub { margin: 0; font-size: 14px; color: #9a9da3; }
-  .btn-white, .btn-white:visited, .btn-white:hover, .btn-white:focus { white-space: nowrap; border: none; background: #fff; color: #17181a; font-size: 15px; font-weight: 700; padding: 14px 26px; border-radius: 999px; cursor: pointer; display: inline-block; text-decoration: none; text-align: center; }
-  .btn-white:hover { background: #e6e7ea; }
+  .hero-pill { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #2A2A2E; border-radius: 99px; padding: 7px 16px; font-size: 13px; color: #A6A6A0; margin-bottom: 36px; }
+  .hero-pill:hover { color: #A6A6A0; border-color: #3A3A3E; }
+  .hero-pill .arrow { color: var(--accent); }
+  .hero h1 { font-size: clamp(44px, 7.5vw, 88px); line-height: 1.06; letter-spacing: -0.04em; font-weight: 800; margin: 0; background: linear-gradient(180deg, #FFFFFF 30%, #B9B9B2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .rot-word { display: inline-block; background: linear-gradient(transparent 55%, color-mix(in srgb, var(--accent) 35%, transparent) 55%); animation: wordIn 0.5s ease; color: #FFFFFF; -webkit-text-fill-color: #FFFFFF; }
+  .hero .lead { max-width: 640px; margin: 28px auto 0; font-size: 18px; line-height: 1.7; color: #A6A6A0; text-wrap: pretty; }
+  .hero .lead strong, .step-card strong { color: #EDEDEA; }
+  .hero-ctas { display: flex; gap: 14px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
+  .btn-primary, .btn-primary:hover { background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 85%, white), var(--accent)); color: #0B0B0C; padding: 15px 30px; border-radius: 14px; font-weight: 800; font-size: 16px; box-shadow: 0 0 44px color-mix(in srgb, var(--accent) 32%, transparent), inset 0 1px 0 rgba(255,255,255,0.4); display: inline-block; }
+  .btn-ghost, .btn-ghost:hover { border: 1px solid #2A2A2E; padding: 15px 30px; border-radius: 14px; font-weight: 700; font-size: 16px; display: inline-block; }
+  .btn-ghost:hover { border-color: #3A3A3E; color: #EDEDEA; }
+  .hero-note { margin-top: 20px; font-size: 13px; color: #6E6E68; }
 
-  .footer { max-width: 1080px; margin: 0 auto; padding: 20px 40px; display: flex; align-items: center; }
-  .footer span { font-size: 13px; color: #83878d; }
-  .footer .links { margin-left: auto; display: flex; gap: 18px; }
-  .footer .links a { font-size: 13px; color: #83878d; }
+  .marquee-wrap { border-top: 1px solid #1D1D20; border-bottom: 1px solid #1D1D20; overflow: hidden; padding: 26px 0; background: linear-gradient(180deg, #101012, #0C0C0E); mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); }
+  .marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+  .stat-item { display: flex; align-items: baseline; gap: 10px; padding: 0 44px; border-right: 1px solid #1D1D20; white-space: nowrap; }
+  .stat-item .n { font-size: 28px; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+  .stat-item .l { font-size: 14px; color: #A6A6A0; }
+  .kw-wrap { border-top: 1px solid #1D1D20; overflow: hidden; padding: 22px 0; mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); }
+  .kw-track { display: flex; width: max-content; animation: marqueeR 32s linear infinite; }
+  .kw-item { display: flex; align-items: center; gap: 22px; padding: 0 22px; white-space: nowrap; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #3A3A3E; }
+  .kw-item .star { color: var(--accent); font-size: 12px; }
 
-  /* ── Stats strip ── */
-  .stats { border-top: 1px solid #f0f1f3; border-bottom: 1px solid #f0f1f3; background: #fafbfc; }
-  .stats-inner { max-width: 1080px; margin: 0 auto; padding: 30px 56px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-  .stat { text-align: center; }
-  .stat .big { font-size: 27px; font-weight: 800; letter-spacing: -0.02em; color: #17181a; }
-  .stat .big small { font-size: 15px; font-weight: 700; }
-  .stat .lbl { margin-top: 5px; font-size: 12.5px; line-height: 1.4; color: #83878d; }
+  .section { max-width: 1100px; margin: 0 auto; padding: 110px 32px 40px; }
+  .kicker { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: var(--accent); text-transform: uppercase; margin: 0 0 14px; }
+  .h2 { font-size: clamp(32px, 4.5vw, 52px); letter-spacing: -0.03em; font-weight: 800; margin: 0 0 18px; line-height: 1.1; }
+  .sub { color: #A6A6A0; font-size: 16px; max-width: 560px; margin: 0 0 52px; line-height: 1.7; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
 
-  /* ── Use cases ── */
-  .usecase { display: flex; gap: 14px; align-items: flex-start; background: #f5f6f8; border-radius: 16px; padding: 20px 22px; }
-  .usecase .ico { flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-  .usecase h3 { margin: 2px 0 5px; font-size: 15.5px; font-weight: 700; }
-  .usecase p { margin: 0; font-size: 13.5px; line-height: 1.6; color: #55585d; }
+  .f-card { background: linear-gradient(180deg, #17171A, #111113); border: 1px solid #1D1D20; border-radius: 18px; padding: 28px; transition: border-color 0.2s, box-shadow 0.2s, transform 0.25s; }
+  .f-card:hover { border-color: color-mix(in srgb, var(--accent) 40%, #1D1D20); box-shadow: 0 12px 40px -18px color-mix(in srgb, var(--accent) 45%, transparent); transform: translateY(-5px); }
+  .f-icon { width: 40px; height: 40px; border-radius: 11px; background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 22%, #1D1D20), #1D1D20); border: 1px solid color-mix(in srgb, var(--accent) 25%, #1D1D20); color: var(--accent); display: grid; place-items: center; font-weight: 800; font-size: 17px; margin-bottom: 18px; }
+  .f-card h3 { font-size: 18px; font-weight: 800; margin: 0 0 10px; letter-spacing: -0.01em; }
+  .f-card p { margin: 0; font-size: 14.5px; line-height: 1.7; color: #A6A6A0; text-wrap: pretty; }
 
-  /* ── Before / After ── */
-  .ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: stretch; }
-  .ba-col { border-radius: 18px; padding: 24px; }
-  .ba-before { background: #f5f6f8; border: 1px solid #eceef1; }
-  .ba-after { background: #eef3fd; border: 1px solid #d9e4fb; }
-  .ba-tag { display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: 0.04em; padding: 4px 11px; border-radius: 999px; margin-bottom: 14px; }
-  .ba-before .ba-tag { background: #e6e7ea; color: #6b6e74; }
-  .ba-after .ba-tag { background: #2a63e8; color: #fff; }
-  .ba-col p.body { margin: 0; font-size: 14px; line-height: 1.75; color: #55585d; }
-  .ba-concl { margin: 0 0 4px; font-size: 14.5px; font-weight: 700; line-height: 1.6; color: #17181a; }
-  .ba-arrow { align-self: center; font-size: 22px; color: #2a63e8; font-weight: 800; }
-  .ba-li { display: flex; gap: 9px; align-items: flex-start; margin-top: 10px; font-size: 13.5px; line-height: 1.6; color: #3a3d42; }
-  .ba-li .d { width: 6px; height: 6px; border-radius: 50%; background: #2a63e8; margin-top: 7px; flex-shrink: 0; }
+  .step-card { background: linear-gradient(180deg, #17171A, #111113); border: 1px solid #1D1D20; border-radius: 18px; padding: 32px 28px; }
+  .step-num { font-size: 44px; font-weight: 900; letter-spacing: -0.04em; color: var(--accent); margin-bottom: 16px; }
+  .step-card h3 { font-size: 18px; font-weight: 800; margin: 0 0 10px; }
+  .step-card p { margin: 0; font-size: 14.5px; line-height: 1.7; color: #A6A6A0; }
 
-  /* ── Trust band ── */
-  .trust { background: #eef3fd; }
-  .trust-inner { max-width: 1080px; margin: 0 auto; padding: 56px; }
-  .trust h2 { margin: 0 0 10px; font-size: 27px; font-weight: 800; letter-spacing: -0.02em; }
-  .trust .sub { margin: 0 0 28px; font-size: 15px; color: #55585d; line-height: 1.7; max-width: 640px; }
-  .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .trust-card { background: #fff; border-radius: 16px; padding: 22px; }
-  .trust-card .ico { font-size: 22px; margin-bottom: 10px; }
-  .trust-card h3 { margin: 0 0 6px; font-size: 15.5px; font-weight: 700; }
-  .trust-card p { margin: 0; font-size: 13.5px; line-height: 1.65; color: #55585d; }
+  .ba-before { background: #111113; border: 1px solid #1D1D20; border-radius: 18px; padding: 32px; }
+  .ba-label { margin: 0 0 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .ba-before p.body { margin: 0; font-size: 15.5px; line-height: 1.8; color: #A6A6A0; text-wrap: pretty; }
+  .ba-before strong, .ba-after strong { color: #EDEDEA; }
+  .ba-after { background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 8%, #131315), #111113); border: 1px solid color-mix(in srgb, var(--accent) 35%, #1D1D20); border-radius: 18px; padding: 32px; }
+  .ba-list { display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.6; color: #D8D8D2; }
+  .ba-list .row { display: flex; gap: 10px; }
+  .ba-list .check { color: var(--accent); }
 
-  /* ── FAQ ── */
-  .faq details { border: 1px solid #eceef1; border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
-  .faq summary { list-style: none; cursor: pointer; padding: 18px 22px; font-size: 15.5px; font-weight: 700; color: #17181a; display: flex; align-items: center; }
-  .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: "+"; margin-left: auto; padding-left: 16px; font-size: 21px; font-weight: 400; color: #9a9da3; }
-  .faq details[open] summary::after { content: "\2212"; }
-  .faq details[open] summary { border-bottom: 1px solid #f0f1f3; }
-  .faq .ans { padding: 16px 22px 20px; font-size: 14px; line-height: 1.75; color: #55585d; }
-  .faq .ans b { color: #3a3d42; }
+  .p-card { background: linear-gradient(180deg, #17171A, #111113); border: 1px solid #1D1D20; border-radius: 18px; padding: 28px; }
+  .p-card h3 { font-size: 17px; font-weight: 800; margin: 0 0 10px; }
+  .p-card p { margin: 0; font-size: 14.5px; line-height: 1.7; color: #A6A6A0; }
 
-  /* ── Demo animation ── */
-  .demo-wrap { flex-shrink: 0; background: linear-gradient(160deg, #eef3fd, #dfe8fa); border-radius: 20px; padding: 28px; }
-  .demo-stage { position: relative; width: 350px; height: 470px; }
-  .demo-card { position: absolute; inset: 0; border-radius: 22px; }
-  .chip { display: flex; align-items: flex-start; gap: 9px; background: #e6e7ea; border-radius: 12px; padding: 9px 12px; }
-  .chip .dot { width: 5px; height: 5px; border-radius: 50%; background: #2a63e8; margin-top: 6px; flex-shrink: 0; }
-  .chip span:last-child { font-size: 11px; line-height: 1.55; color: #3a3d42; }
+  .faq { max-width: 760px; margin: 0 auto; padding: 110px 32px; }
+  details { border-top: 1px solid #1D1D20; padding: 4px 0; }
+  details > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; font-size: 16.5px; font-weight: 700; }
+  details > summary::-webkit-details-marker { display: none; }
+  .dt-plus { color: var(--accent); font-size: 20px; transition: transform 0.2s; flex-shrink: 0; }
+  details[open] .dt-plus { transform: rotate(45deg); }
+  details p { margin: 0 0 22px; font-size: 15px; line-height: 1.75; color: #A6A6A0; text-wrap: pretty; }
 
-  /* Demo flow, 4 stages: 1) select + toolbar (0–20%) 2) highlight + note (20–44%) 3) bookmark save (44–68%) 4) side-panel timeline (68–100%) */
-  @keyframes selectLine { 0%, 4% { background: #eff0f2; } 10%, 100% { background: #b9d1f9; } }
-  @keyframes floatBtn { 0%, 6% { opacity: 0; transform: scale(0.6); } 9%, 16% { opacity: 1; transform: scale(1); } 20%, 100% { opacity: 0; transform: scale(0.9); } }
-  @keyframes cursorMove { 0% { transform: translate(130px, 190px); opacity: 0; } 4% { opacity: 1; transform: translate(130px, 190px); } 11%, 13% { transform: translate(0, 0); } 14% { transform: translate(0, 0) scale(0.8); } 16%, 18% { transform: translate(0, 0) scale(1); } 20%, 100% { opacity: 0; transform: translate(0, 0); } }
-  @keyframes highlightIn { 0%, 20% { opacity: 0; transform: translateY(14px); } 24%, 42% { opacity: 1; transform: translateY(0); } 46%, 100% { opacity: 0; transform: translateY(-6px); } }
-  @keyframes markSweep { 0%, 24% { background-size: 0% 82%; } 33%, 100% { background-size: 100% 82%; } }
-  @keyframes popupIn { 0%, 44% { opacity: 0; transform: translateY(14px) scale(0.97); } 48%, 64% { opacity: 1; transform: translateY(0) scale(1); } 68%, 100% { opacity: 0; transform: translateY(-6px) scale(0.98); } }
-  @keyframes p1 { 0%, 50% { opacity: 0; transform: translateY(6px); } 54%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes p2 { 0%, 54% { opacity: 0; transform: translateY(6px); } 58%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes p3 { 0%, 58% { opacity: 0; transform: translateY(6px); } 62%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes histIn { 0%, 68% { opacity: 0; transform: translateX(18px); } 72%, 96% { opacity: 1; transform: translateX(0); } 99%, 100% { opacity: 0; } }
-  @keyframes h1a { 0%, 74% { opacity: 0; transform: translateY(8px); } 78%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes h2a { 0%, 78% { opacity: 0; transform: translateY(8px); } 82%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes h3a { 0%, 82% { opacity: 0; transform: translateY(8px); } 86%, 100% { opacity: 1; transform: translateY(0); } }
+  .footer { border-top: 1px solid #1D1D20; text-align: center; padding: 110px 32px 0; overflow: hidden; }
+  .footer .h2f { font-size: clamp(30px, 4vw, 46px); letter-spacing: -0.03em; font-weight: 800; margin: 0 0 16px; }
+  .footer .subf { color: #A6A6A0; font-size: 15px; margin: 0 0 32px; }
+  .footer-links { display: flex; gap: 24px; justify-content: center; margin: 52px 0 0; font-size: 13.5px; flex-wrap: wrap; }
+  .footer-links a { color: #6E6E68; }
+  .footer-links a:hover { color: var(--accent); }
+  .copyright { font-size: 12.5px; color: #3A3A3E; margin: 24px 0 0; }
+  .giant { font-size: clamp(120px, 24vw, 340px); font-weight: 900; letter-spacing: -0.05em; line-height: 0.78; margin-top: 40px; user-select: none; background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 16%, #141416), #0B0B0C 90%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
-  @media (max-width: 900px) {
-    .hero { flex-direction: column; padding: 48px 24px; gap: 40px; }
-    .hero h1 { font-size: 34px; }
-    .section { padding: 40px 24px; }
-    .grid3, .grid2 { grid-template-columns: 1fr; }
-    .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 22px 16px; padding: 28px 24px; }
-    .ba { grid-template-columns: 1fr; }
-    .ba-arrow { transform: rotate(90deg); justify-self: center; }
-    .trust-inner { padding: 40px 24px; }
-    .trust-grid { grid-template-columns: 1fr; }
-    .cta-inner { padding: 40px 24px; }
-    .nav-inner { padding: 14px 24px; }
-    .nav-links a.hide-m { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track, .kw-track, .float-card, .hero-glow, .rot-word { animation: none !important; }
+    .f-card { transition: none; }
   }
 </style>
 </head>
 <body>
-
-<nav class="nav">
-  <div class="nav-inner">
-    <span class="logo-badge">C</span>
-    <span style="font-size: 15px; font-weight: 700;">Clarity</span>
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="logo-badge">또</div>
+      <span class="nav-name">Ttoryeot</span>
+    </div>
     <div class="nav-links">
-      <a class="hide-m" href="#features">Features</a>
-      <a class="hide-m" href="#usecases">Use cases</a>
-      <a class="hide-m" href="#faq">FAQ</a>
-      <a href="index.html" title="한국어 페이지">KO</a>
-      <a class="btn-primary" style="font-size: 13px; padding: 9px 18px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Add to Chrome</a>
+      <a href="#features">Features</a>
+      <a href="#faq">FAQ</a>
+      <a href="index.html">KO</a>
+      <a class="btn-nav" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Add to Chrome</a>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<header class="hero">
-  <div style="flex: 1; min-width: 280px;">
-    <h1>The browser<br>that never forgets<br>what you read</h1>
-    <p class="lead">Mark key passages with the <b>highlighter</b> and save pages to revisit as <b>bookmarks</b>. Everything you summarize stacks up in your <b>history</b> too — all in one side panel where you can search it, organize it with folders and tags, and export it to your notes app. Highlights <b>reappear right where you left them</b> when you return. And when you need it, conclusion-first <b>AI summaries</b> — all on your device, for free.</p>
-    <a class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Add to Chrome — Free</a>
-    <p class="note">No sign-up · Your data stays in your browser</p>
-  </div>
-
-  <!-- Animated demo: select → highlight → bookmark → side panel -->
-  <div class="demo-wrap">
-    <div class="demo-stage">
-
-      <!-- stage 1: select text + floating toolbar (Summarize / Highlight / Bookmark) -->
-      <div class="demo-card" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 16px rgba(42,99,232,0.1); padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
-        <div style="width: 220px; height: 17px; border-radius: 5px; background: #e6e7ea; margin-bottom: 8px;"></div>
-        <div style="width: 92%; height: 11px; border-radius: 4px; animation: selectLine 14s linear infinite;"></div>
-        <div style="width: 97%; height: 11px; border-radius: 4px; animation: selectLine 14s linear infinite;"></div>
-        <div style="width: 64%; height: 11px; border-radius: 4px; animation: selectLine 14s linear infinite;"></div>
-        <div style="width: 89%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 94%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 71%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 90%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 84%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 52%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="position: absolute; top: 126px; left: 20px; display: flex; align-items: center; gap: 1px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); border-radius: 999px; padding: 5px 6px; animation: floatBtn 14s ease infinite;">
-          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 10.5px; font-weight: 700; padding: 5px 9px; white-space: nowrap;">Summarize</span>
-          <span style="display: flex; align-items: center; gap: 4px; background: #fef3c7; color: #92600a; font-size: 10.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; white-space: nowrap;">Highlight</span>
-          <span style="display: flex; align-items: center; gap: 4px; background: #2a63e8; color: #fff; font-size: 10.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; white-space: nowrap;">Bookmark</span>
-        </div>
-        <div style="position: absolute; top: 146px; left: 176px; pointer-events: none; animation: cursorMove 14s ease-in-out infinite; z-index: 10;">
-          <div style="width: 0; height: 0; border-left: 9px solid #17181a; border-right: 5px solid transparent; border-bottom: 16px solid transparent; border-top: 5px solid transparent; transform: rotate(-70deg); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></div>
-        </div>
+  <header class="hero">
+    <div class="hero-glow"></div>
+    <div class="float-card" style="left:-30px;top:230px;--r:-5deg;animation-duration:6s;">
+      <div class="fc-head"><span class="fc-badge">또</span>Highlight saved</div>
+      <div class="fc-body"><span class="fc-mark">My note</span> — check this again later</div>
+    </div>
+    <div class="float-card" style="right:-30px;top:330px;--r:4deg;animation-duration:7s;">
+      <div class="fc-head"><span class="fc-badge">또</span>Bookmark saved</div>
+      <div class="fc-body">📁 Work · Reading reminder 9:00 AM</div>
+    </div>
+    <div style="position:relative;">
+      <a class="hero-pill" href="#features">Highlights stay right where you left them <span class="arrow">→</span></a>
+      <h1>The browser where<br>reading <span class="rot-word" id="rot-word">never fades</span></h1>
+      <p class="lead">Mark key passages with a <strong>highlighter</strong>, save pages to revisit as <strong>bookmarks</strong>, and let every summary pile up as <strong>records</strong> — all in one side panel you can search, organize with folders and tags, and export to your notes app.</p>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Add to Chrome — Free</a>
+        <a class="btn-ghost" href="#features">See the features</a>
       </div>
+      <p class="hero-note">No sign-up · Data stays in your browser · Free forever</p>
+    </div>
+  </header>
 
-      <!-- stage 2: highlighter + note -->
-      <div class="demo-card" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 16px rgba(42,99,232,0.1); padding: 22px 24px; display: flex; flex-direction: column; gap: 11px; animation: highlightIn 14s ease infinite; opacity: 0;">
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">C</span>
-          <span style="font-size: 13.5px; font-weight: 700;">Highlighter</span>
-          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: #fef3c7; color: #92600a; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#92600a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6.5 16.5l8-8a2 2 0 0 1 3 3l-8 8-4 1z"/></svg>Saved</span>
-        </div>
-        <div style="width: 210px; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 96%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="line-height: 1.95;">
-          <span style="font-size: 13px; color: #17181a; font-weight: 600; background: linear-gradient(#fde68a, #fde68a) no-repeat; background-size: 0% 82%; background-position: 0 62%; box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 1px 2px; animation: markSweep 14s ease infinite;">Highlights stay right where you left them, even after you revisit.</span>
-        </div>
-        <div style="width: 84%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 66%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="margin-top: 6px; display: flex; gap: 8px; align-items: flex-start; background: #f8f9fb; border-left: 3px solid #f0c000; border-radius: 8px; padding: 10px 12px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92600a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;"><path d="M4 5a1 1 0 0 1 1-1h10l5 5v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M14 4v5h5"/><path d="M8 13h7M8 16h5"/></svg>
-          <span style="font-size: 11.5px; line-height: 1.5; color: #3a3d42;">My note — make sure to check this again</span>
-        </div>
+  <section class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track" id="stat-track">
+      <div class="stat-item"><span class="n">1 click</span><span class="l">One drag saves a highlight or bookmark</span></div>
+      <div class="stat-item"><span class="n">3 tabs</span><span class="l">Bookmarks · Records · Highlights</span></div>
+      <div class="stat-item"><span class="n">100%</span><span class="l">On-device processing &amp; storage</span></div>
+      <div class="stat-item"><span class="n">$0</span><span class="l">Free forever, no payments</span></div>
+      <div class="stat-item"><span class="n">0</span><span class="l">Sign-ups · API keys required</span></div>
+    </div>
+  </section>
+
+  <section id="features" class="section">
+    <p class="kicker">Three essentials — Bookmarks · Highlighter · Records</p>
+    <h2 class="h2" data-reveal>Mark it, save it,<br>find it again.</h2>
+    <p class="sub">All free, no sign-up. One drag saves a highlight or bookmark, and everything gathers in one side panel.</p>
+    <div class="grid" data-reveal>
+      <div class="f-card"><div class="f-icon">B</div><h3>Bookmarks — save it for later</h3><p>Save any page as-is, no summary needed. If you selected text, that sentence comes along too. One toolbar button or right-click and you're done — your reading flow never breaks.</p></div>
+      <div class="f-card"><div class="f-icon">H</div><h3>Highlighter — right where you left it</h3><p>Paint key passages and attach notes. Saved highlights reappear in the exact same spot when you revisit, and gather by article in the side panel.</p></div>
+      <div class="f-card"><div class="f-icon">R</div><h3>Records — stacking up automatically</h3><p>Every summary lands on a date-based timeline without saving anything manually. One search brings back “that article from the other day” instantly.</p></div>
+      <div class="f-card"><div class="f-icon">F</div><h3>Folders + tags</h3><p>Attach one folder and any number of tags to bookmarks, records, and highlights. Combine folders, tags, and search to filter exactly what you need.</p></div>
+      <div class="f-card"><div class="f-icon">⏰</div><h3>Reading reminders</h3><p>Set a time to read on any saved item. You'll get a notification and an on-screen card, with daily/weekly repeats or a 10-minute snooze.</p></div>
+      <div class="f-card"><div class="f-icon">↗</div><h3>Export to your notes app</h3><p>Download everything as Markdown or copy to the clipboard and paste straight into Notion or Obsidian. Whatever filter you're viewing is exactly what exports.</p></div>
+      <div class="f-card"><div class="f-icon">🔍</div><h3>Full-text search</h3><p>Bookmarks store a snapshot of the page body, so you can find things by content even when you forget the title — with typo tolerance and matched-sentence excerpts.</p></div>
+      <div class="f-card"><div class="f-icon">AI</div><h3>Conclusion-first AI summary</h3><p>Select a long read and get one conclusion sentence plus key points. One right-click summarizes the whole page. Results save to Records automatically.</p></div>
+      <div class="f-card"><div class="f-icon">✎</div><h3>Right-click 6 modes</h3><p>Summarize, write, proofread, change tone, translate, or ask about any selection. Double-click an unfamiliar word for a simple in-context definition.</p></div>
+    </div>
+  </section>
+
+  <section id="how" class="section" style="padding:110px 32px;">
+    <p class="kicker" data-reveal style="text-align:center;">How it works</p>
+    <h2 class="h2" data-reveal style="margin-bottom:52px;text-align:center;">Three steps. Done.</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+      <div class="step-card" data-reveal="left" data-reveal-delay="0">
+        <div class="step-num">01</div>
+        <h3>Install the extension</h3>
+        <p>Add it from the Chrome Web Store and you're ready. No setup required.</p>
       </div>
-
-      <!-- stage 3: bookmark save -->
-      <div class="demo-card" style="background: #f2f2f4; box-shadow: 0 12px 36px rgba(42,99,232,0.2); padding: 15px; display: flex; flex-direction: column; justify-content: center; gap: 9px; animation: popupIn 14s ease infinite; opacity: 0;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">C</span>
-          <span style="font-size: 14px; font-weight: 700;">Bookmark</span>
-          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: #2a63e8; color: #fff; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg>Saved</span>
-        </div>
-        <div style="background: #fff; border-radius: 14px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); animation: p1 14s ease infinite;">
-          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-            <span style="width: 16px; height: 16px; border-radius: 4px; background: #e6e7ea; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0;">📰</span>
-            <p style="margin: 0; font-size: 12.5px; font-weight: 700; line-height: 1.5;">[Notice] Office café seasonal event</p>
-          </div>
-          <p style="margin: 0; font-size: 10.5px; color: #9a9da3;">intra.example.com/notice/1024</p>
-        </div>
-        <div class="chip" style="animation: p2 14s ease infinite;"><span class="dot"></span><span>Saves the page as-is, no summary — with your selected sentences included.</span></div>
-        <div class="chip" style="animation: p3 14s ease infinite;"><span class="dot"></span><span>Reopen it anytime from the side panel when you're ready to read.</span></div>
-        <div style="display: flex; gap: 6px; margin-top: 2px; animation: p3 14s ease infinite;">
-          <span style="background: #e6e7ea; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px;">📁 Work</span>
-          <span style="background: #e6e7ea; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px;">#event</span>
-          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#55585d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Remind me</span>
-        </div>
+      <div class="step-card" data-reveal="left" data-reveal-delay="140">
+        <div class="step-num">02</div>
+        <h3>Select text → mark or save</h3>
+        <p>Drag over text and the <strong>[Summary] · [Highlight] · [Bookmark]</strong> toolbar appears. Paint it, save it, summarize it.</p>
       </div>
-
-      <!-- stage 4: side-panel bookmark timeline -->
-      <div class="demo-card" style="background: #f2f2f4; box-shadow: 0 12px 36px rgba(42,99,232,0.2); padding: 16px; display: flex; flex-direction: column; gap: 10px; animation: histIn 14s ease infinite; opacity: 0;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">C</span>
-          <span style="font-size: 14px; font-weight: 700;">Side panel</span>
-        </div>
-        <div style="display: flex; background: #e2e3e6; border-radius: 999px; padding: 2px;">
-          <span style="flex: 1; text-align: center; background: #2a63e8; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 0; border-radius: 999px;">Bookmarks</span>
-          <span style="flex: 1; text-align: center; color: #83878d; font-size: 10px; font-weight: 700; padding: 4px 0;">History</span>
-          <span style="flex: 1; text-align: center; color: #83878d; font-size: 10px; font-weight: 700; padding: 4px 0;">Highlights</span>
-        </div>
-        <span style="font-size: 10.5px; font-weight: 700; color: #9a9da3; letter-spacing: 0.03em; padding-left: 2px;">TODAY</span>
-        <div style="display: flex; flex-direction: column;">
-          <div style="display: flex; align-items: stretch; animation: h1a 14s ease infinite;">
-            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">just now</span></div>
-            <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
-            <div style="flex: 1; padding-bottom: 8px;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">📰 [Notice] Office café seasonal event</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">intra.example.com · 📁 Work · #event</p></div></div>
-          </div>
-          <div style="display: flex; align-items: stretch; animation: h2a 14s ease infinite;">
-            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">1 hr ago</span></div>
-            <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
-            <div style="flex: 1; padding-bottom: 8px;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">📊 Industry report — Q3 market outlook</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">research.example.com · #research</p></div></div>
-          </div>
-          <div style="display: flex; align-items: stretch; animation: h3a 14s ease infinite;">
-            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">yesterday</span></div>
-            <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
-            <div style="flex: 1;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">✍️ Blog — 12 ways to write better</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">blog.example.com · 📁 Study</p></div></div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</header>
-
-<div class="stats">
-  <div class="stats-inner">
-    <div class="stat"><div class="big">1<small> click</small></div><div class="lbl">One drag saves a<br>highlight or bookmark</div></div>
-    <div class="stat"><div class="big">3<small> tabs</small></div><div class="lbl">Bookmarks · History ·<br>Highlights</div></div>
-    <div class="stat"><div class="big">100<small>%</small></div><div class="lbl">On-device<br>processing &amp; storage</div></div>
-    <div class="stat"><div class="big">$0</div><div class="lbl">Free forever<br>No payments</div></div>
-    <div class="stat"><div class="big">0</div><div class="lbl">Sign-ups ·<br>API keys required</div></div>
-  </div>
-</div>
-
-<section class="section" id="features">
-  <h2>Three things at the core — Bookmarks · Highlighter · History</h2>
-  <div class="grid3">
-    <div class="feature feature-core">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg></span>
-      <h3>Bookmarks — save it for later</h3>
-      <p>Save pages to revisit <b>as-is, no summary</b> — with your selected sentences included. One toolbar button or <b>a single right-click</b>, so your reading flow never breaks.</p>
-    </div>
-    <div class="feature feature-core">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6.5 16.5l8-8a2 2 0 0 1 3 3l-8 8-4 1z"/></svg></span>
-      <h3>Highlighter — stays right there</h3>
-      <p>Mark key passages and attach <b>notes</b>. Saved highlights <b>reappear in the same spot</b> when you revisit the page, and they're gathered by article in the side panel.</p>
-    </div>
-    <div class="feature feature-core">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6.5h12M8 12h12M8 17.5h12"/><circle cx="4.2" cy="6.5" r="1.1"/><circle cx="4.2" cy="12" r="1.1"/><circle cx="4.2" cy="17.5" r="1.1"/></svg></span>
-      <h3>History — builds itself</h3>
-      <p>Every summary you run lands in a <b>date-grouped timeline</b> automatically — no saving required. With site favicons and <b>search</b>, "that article from last week" is one query away.</p>
-    </div>
-  </div>
-  <h2 style="margin-top: 56px;">Make everything you've saved more useful</h2>
-  <div class="grid2">
-    <div class="feature">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></svg></span>
-      <h3>Organize with folders + tags</h3>
-      <p>Attach one <b>📁 folder</b> and any number of <b>#tags</b> to bookmarks, history entries and highlights. Combine folders, tags and search to pull out exactly what you need.</p>
-    </div>
-    <div class="feature">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>
-      <h3>Reading reminders</h3>
-      <p>So "I'll read it later" doesn't become never — set a <b>reading time</b> on any saved item. When it's due you get a <b>notification and an on-page card</b>, with daily/weekly repeats and 10-minute snooze.</p>
-    </div>
-    <div class="feature">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4.5 19.5h15"/></svg></span>
-      <h3>Export to your notes app</h3>
-      <p>Download your bookmarks, history and highlights as <b>Markdown</b> or <b>copy them to the clipboard</b> and paste straight into Notion or Obsidian. What you see filtered is what gets exported.</p>
-    </div>
-    <div class="feature">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></span>
-      <h3>Search that reads the full text</h3>
-      <p>Bookmarks store a <b>text snapshot</b> of the page, so you can find things by content even when the title escapes you. With <b>typo tolerance</b>, and matched sentences shown as highlighted excerpts.</p>
-    </div>
-  </div>
-  <h2 style="margin-top: 56px;">And when you need it — AI that helps you read</h2>
-  <div class="grid3">
-    <div class="feature">
-      <span class="glyph">S</span>
-      <h3>Conclusion-first summaries</h3>
-      <p>Select a long read and get <b>one conclusion sentence + key points</b>. No selection? <b>One right-click</b> summarizes the whole page. Results save to history automatically.</p>
-    </div>
-    <div class="feature">
-      <span class="glyph">✎</span>
-      <h3>Six modes on right-click</h3>
-      <p>The right-click menu offers <b>Summarize · Write · Proofread · Tone · Translate · Ask</b>: point-first rewriting, grammar fixes, formal↔casual tone, on-device translation, and questions about any passage.</p>
-    </div>
-    <div class="feature">
-      <span class="glyph">Aa</span>
-      <h3>Word definitions · Read aloud</h3>
-      <p><b>Double-click</b> any unfamiliar word for a context-aware plain definition in a small popover. Summaries and translations can also be <b>read out loud</b>.</p>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="usecases" style="padding-top: 8px;">
-  <h2>Where it really earns its keep</h2>
-  <div class="grid3">
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></span>
-      <div><h3>Research</h3><p>Highlight and annotate every supporting passage, then group them in folders. Scattered sources come together in one panel.</p></div>
-    </div>
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg></span>
-      <div><h3>"I'll read it later"</h3><p>Bookmark what you can't read now and set a reading reminder. It pings you right about when you'd have forgotten.</p></div>
-    </div>
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 0 1 2-2h13.5v14H6.5a2.5 2.5 0 0 0-2.5 2.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H19.5v-4"/></svg></span>
-      <div><h3>Studying</h3><p>Highlight and annotate lecture materials and articles, organize by subject with folders and tags, then export to Markdown for revision notes.</p></div>
-    </div>
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="13.5" height="15" rx="1.5"/><path d="M16.5 8H20v9.5a2 2 0 0 1-2 2"/><path d="M6 8.5h7M6 11.5h7M6 14.5h4.5"/></svg></span>
-      <div><h3>Long news &amp; articles</h3><p>Endless-scroll pieces get a conclusion-first summary. The result stays in your history, easy to find again.</p></div>
-    </div>
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6.5h12M8 12h12M8 17.5h12"/><circle cx="4.2" cy="6.5" r="1.1"/><circle cx="4.2" cy="12" r="1.1"/><circle cx="4.2" cy="17.5" r="1.1"/></svg></span>
-      <div><h3>"Where did I see that?"</h3><p>Memory fades; your history doesn't. Search, folders, tags and favicons find last week's article in seconds.</p></div>
-    </div>
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4.5 19.5h15"/></svg></span>
-      <div><h3>Notion &amp; Obsidian users</h3><p>Copy what you've collected on the web as Markdown, straight into your notes app. No need to rebuild your system.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" style="padding-top: 8px;">
-  <h2>Reading that used to scatter and vanish, gathered</h2>
-  <div class="ba">
-    <div class="ba-col ba-before">
-      <span class="ba-tag">UNTIL NOW</span>
-      <p class="body">Thirty open tabs, links sent to yourself, screenshots buried in a folder… You saved them because they mattered, but when you actually need one, <b>you can't remember where you put it.</b> How many articles have you given up looking for?</p>
-    </div>
-    <div class="ba-arrow">→</div>
-    <div class="ba-col ba-after">
-      <span class="ba-tag">WITH CLARITY</span>
-      <p class="ba-concl">Bookmarks, highlights and history live in one side panel.</p>
-      <div class="ba-li"><span class="d"></span><span>Revisit a page and your highlights are right where you left them</span></div>
-      <div class="ba-li"><span class="d"></span><span>Date timeline · search · folders · tags find it again in seconds</span></div>
-      <div class="ba-li"><span class="d"></span><span>Export to your notes app as Markdown</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" style="padding-top: 8px;">
-  <h2>Up and running in three steps</h2>
-  <div class="grid3">
-    <div class="step">
-      <span class="num">01</span>
-      <h3>Install the extension</h3>
-      <p>Add it from the Chrome Web Store and you're done. No setup required.</p>
-    </div>
-    <div class="step">
-      <span class="num">02</span>
-      <h3>Select text → mark or save</h3>
-      <p>Drag over any text and the <b>[Summarize] · [Highlight] · [Bookmark]</b> toolbar appears. Highlight it, save it, or summarize it. Six AI modes are also available from the right-click menu.</p>
-    </div>
-    <div class="step">
-      <span class="num">03</span>
-      <h3>Find it again in the side panel</h3>
-      <p>Click the toolbar icon to open the <b>Bookmarks · History · Highlights</b> panel. Search, organize with folders and tags, set reminders, and export to your notes app.</p>
-    </div>
-  </div>
-</section>
-
-<section class="trust">
-  <div class="trust-inner">
-    <h2>What you read never leaves your browser</h2>
-    <p class="sub">Bookmarks, highlights and history are stored only in <b>your computer's browser storage</b>, and AI summaries run by default on Chrome's built-in AI, <b>on your device</b>. No external servers, no login.</p>
-    <div class="trust-grid">
-      <div class="trust-card">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><circle cx="12" cy="15" r="1.2"/></svg></div>
-        <h3>Local storage, local processing</h3>
-        <p>Highlights on work documents and summaries of personal email never leave your machine. Deleting and managing them is entirely in your hands.</p>
-      </div>
-      <div class="trust-card">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="4.5" rx="1.2"/><path d="M5 13v7.5h14V13"/><path d="M12 8.5V20.5"/><path d="M12 8.5C9.8 8.5 7.5 8 7.5 6A2.3 2.3 0 0 1 12 5.5a2.3 2.3 0 0 1 4.5.5c0 2-2.3 2.5-4.5 2.5z"/></svg></div>
-        <h3>Free forever</h3>
-        <p>No subscriptions, no ads, no usage caps. Every feature is yours the moment you install.</p>
-      </div>
-      <div class="trust-card">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v6M6 14v6M12 4v8M12 16v4M18 4v2M18 10v10"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="14" r="2"/><circle cx="18" cy="8" r="2"/></svg></div>
-        <h3>More power if you want it</h3>
-        <p>Optionally add your own OpenAI, Anthropic or Gemini API key in the options to run the AI features on a larger model. Entirely your choice.</p>
+      <div class="step-card" data-reveal="left" data-reveal-delay="280">
+        <div class="step-num">03</div>
+        <h3>Find it in the side panel</h3>
+        <p>Click the toolbar icon to open the <strong>Bookmarks · Records · Highlights</strong> panel. Search, organize, export.</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section" id="faq">
-  <h2>Frequently asked questions</h2>
-  <div class="faq">
-    <details open>
-      <summary>Is it really free?</summary>
-      <div class="ans">Yes. Bookmarks, the highlighter, history, reminders, summaries and export — <b>every feature is free</b>. No payment method to register, no usage limits.</div>
-    </details>
-    <details>
-      <summary>Where is my data stored?</summary>
-      <div class="ans">Bookmarks, highlights and history all live only in <b>your computer's browser storage</b>. With the default settings, AI summaries are processed on your device too — selected text is never sent anywhere. You search and delete everything yourself.</div>
-    </details>
-    <details>
-      <summary>Do highlights survive when I revisit a page?</summary>
-      <div class="ans">Yes. Reopen the same page and your highlights are <b>redrawn in the same spot</b>. Notes stay attached, and the side panel gathers them by article where you can browse or delete them.</div>
-    </details>
-    <details>
-      <summary>What's the difference between bookmarks and history?</summary>
-      <div class="ans"><b>Bookmarks</b> save a page (and any selected sentences) as-is, no summary — your "read it later" list. <b>History</b> is the timeline that fills up automatically every time you run an AI summary. Together with <b>Highlights</b> (highlighter + notes), they make up the side panel's three tabs.</div>
-    </details>
-    <details>
-      <summary>Can I move what I've saved into my notes app?</summary>
-      <div class="ans">Yes. In every tab you can <b>download a Markdown file</b> or <b>copy to the clipboard</b>, then paste into Notion, Obsidian and the like. If you've filtered by search, folder or tag, exactly what's shown is what gets exported.</div>
-    </details>
-    <details>
-      <summary>What AI features are there?</summary>
-      <div class="ans">Select text for a <b>conclusion-first summary</b> (or right-click with nothing selected to summarize the whole page), and use <b>Write · Proofread · Tone · Translate · Ask</b> from the right-click menu. There's also <b>double-click word definitions</b> and <b>read-aloud</b> for results. Your favorite modes can be added to the toolbar in the options.</div>
-    </details>
-    <details>
-      <summary>I want a smarter AI.</summary>
-      <div class="ans">Enter your own <b>OpenAI, Anthropic or Gemini API key</b> on the options page to switch to that model. In that case selected text is sent to that provider — clearly explained, and entirely opt-in. Bookmarks, highlights and history still stay in your browser.</div>
-    </details>
-    <details>
-      <summary>I'd like to report a bug or suggest an improvement.</summary>
-      <div class="ans">Email us anytime at <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">qkrxodud00@gmail.com</a>. Anything is welcome — pain points, feature wishes — <b>we read and act on every message</b>.</div>
-    </details>
-  </div>
-</section>
-
-<section class="cta-band">
-  <div class="cta-inner">
-    <div class="txt">
-      <p class="big">Highlight it, save it, find it again — in one click</p>
-      <p class="sub">Free · No sign-up · Your data stays in your browser</p>
+  <section class="section" style="padding:0 32px 110px;">
+    <h2 class="h2" data-reveal style="margin-bottom:52px;text-align:center;">Reading that used to scatter<br>now gathers in one place.</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:stretch;">
+      <div class="ba-before" data-reveal="left">
+        <p class="ba-label" style="color:#6E6E68;">Until now</p>
+        <p class="body">Thirty open tabs, links sent to yourself, screenshots buried in a folder… You saved it because it mattered, but when you need it, <strong>you can't remember where you put it.</strong> How many articles have you given up on refinding?</p>
+      </div>
+      <div class="ba-after" data-reveal="right" data-reveal-delay="140">
+        <p class="ba-label" style="color:var(--accent);">With Ttoryeot</p>
+        <div class="ba-list">
+          <div class="row"><span class="check">✓</span>Bookmarks, highlights, and records gather in one side panel</div>
+          <div class="row"><span class="check">✓</span>Highlights reappear exactly where you left them</div>
+          <div class="row"><span class="check">✓</span>Timeline, search, folders &amp; tags — refound in seconds</div>
+          <div class="row"><span class="check">✓</span>Export to your notes app as Markdown</div>
+        </div>
+      </div>
     </div>
-    <a class="btn-white" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Add to Chrome</a>
-  </div>
-</section>
+  </section>
 
-<footer class="footer">
-  <span>© 2026 Clarity</span>
-  <div class="links">
-    <a href="#faq">FAQ</a>
-    <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">Send feedback</a>
-    <a href="privacy.en.html">Privacy Policy</a>
-    <a href="index.html">한국어</a>
-  </div>
-</footer>
+  <section class="section" style="padding:0 32px 110px;">
+    <p class="kicker" data-reveal>Privacy First</p>
+    <h2 class="h2" data-reveal>What you read<br>never leaves your browser.</h2>
+    <p class="sub" data-reveal style="max-width:600px;">Bookmarks, highlights, and records live only in your browser's local storage, and AI summaries run on-device with Chrome's built-in AI by default. No external servers, no login.</p>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+      <div class="p-card" data-reveal="scale" data-reveal-delay="0">
+        <h3>🔒 Local storage &amp; processing</h3>
+        <p>Highlights on work documents and summaries of personal email never leave your machine. Deletion and management stay in your hands.</p>
+      </div>
+      <div class="p-card" data-reveal="scale" data-reveal-delay="140">
+        <h3>∞ Free forever</h3>
+        <p>No subscriptions, no ads, no usage limits. Every feature is yours the moment you install.</p>
+      </div>
+      <div class="p-card" data-reveal="scale" data-reveal-delay="280">
+        <h3>⚡ More power if you want it</h3>
+        <p>Add your own OpenAI, Anthropic, or Gemini API key in options to switch the AI to a bigger model. Entirely your choice.</p>
+      </div>
+    </div>
+  </section>
 
+  <section id="faq" class="faq">
+    <p class="kicker">Knowledge Base</p>
+    <h2 class="h2" data-reveal style="margin-bottom:40px;">FAQ.</h2>
+    <div style="display:flex;flex-direction:column;">
+      <details data-reveal>
+        <summary>Is it really free?<span class="dt-plus">＋</span></summary>
+        <p>Yes. Bookmarks, highlighter, records, reminders, summaries, and exports — every feature is free. No payment method, no usage limits.</p>
+      </details>
+      <details data-reveal>
+        <summary>Where is my data stored?<span class="dt-plus">＋</span></summary>
+        <p>Bookmarks, highlights, and records all live only in your browser's local storage. By default, AI summaries are processed on-device too — your selected text never leaves your machine.</p>
+      </details>
+      <details data-reveal>
+        <summary>Do highlights survive a revisit?<span class="dt-plus">＋</span></summary>
+        <p>Yes. Reopen the same page and your highlights reappear in the same spots, notes included. You can browse or delete them by article in the side panel.</p>
+      </details>
+      <details data-reveal>
+        <summary>What's the difference between bookmarks and records?<span class="dt-plus">＋</span></summary>
+        <p>Bookmarks save a page (and any selected text) as-is — a read-it-later. Records is the timeline where AI summary results stack up automatically. Together with Highlights, they make up the side panel's three tabs.</p>
+      </details>
+      <details data-reveal>
+        <summary>I want a smarter AI.<span class="dt-plus">＋</span></summary>
+        <p>Enter your own OpenAI, Anthropic, or Gemini API key on the options page to switch to that model. Even then, your bookmarks, highlights, and records stay in your browser only.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="kw-wrap" aria-hidden="true">
+    <div class="kw-track" id="kw-track">
+      <div class="kw-item"><span class="star">✦</span>Bookmarks</div>
+      <div class="kw-item"><span class="star">✦</span>Highlighter</div>
+      <div class="kw-item"><span class="star">✦</span>Records</div>
+      <div class="kw-item"><span class="star">✦</span>AI Summary</div>
+      <div class="kw-item"><span class="star">✦</span>Reading Reminders</div>
+      <div class="kw-item"><span class="star">✦</span>Folders &amp; Tags</div>
+      <div class="kw-item"><span class="star">✦</span>Full-text Search</div>
+      <div class="kw-item"><span class="star">✦</span>Markdown Export</div>
+    </div>
+  </section>
+
+  <section class="footer">
+    <h2 class="h2f" data-reveal>Mark, save, and find it again —<br>all in one click</h2>
+    <p class="subf">Free · No sign-up · Data stays in your browser</p>
+    <a class="btn-primary" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Add to Chrome</a>
+    <div class="footer-links">
+      <a href="#faq">FAQ</a>
+      <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">Send feedback</a>
+      <a href="privacy.en.html">Privacy policy</a>
+      <a href="index.html">한국어</a>
+    </div>
+    <p class="copyright">© 2026 Ttoryeot</p>
+    <div class="giant" aria-hidden="true">또렷</div>
+  </section>
+
+<script>
+(function () {
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var words = ["never fades", "stays put", "is always found", "keeps stacking up"];
+  var rot = document.getElementById("rot-word");
+  var ri = 0;
+  if (rot && !reduced) {
+    setInterval(function () {
+      ri = (ri + 1) % words.length;
+      var next = rot.cloneNode(false);
+      next.textContent = words[ri];
+      rot.parentNode.replaceChild(next, rot);
+      rot = next;
+    }, 2600);
+  }
+
+  ["stat-track", "kw-track"].forEach(function (id) {
+    var track = document.getElementById(id);
+    if (track) track.innerHTML += track.innerHTML;
+  });
+
+  var els = document.querySelectorAll("[data-reveal]");
+  if (reduced || !("IntersectionObserver" in window)) return;
+  els.forEach(function (el) {
+    var m = el.getAttribute("data-reveal");
+    el.style.opacity = "0";
+    el.style.transform = m === "left" ? "translateX(-48px)" : m === "right" ? "translateX(48px)" : m === "scale" ? "scale(0.9)" : "translateY(28px)";
+    el.style.transition = "opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1)";
+    el.style.transitionDelay = (el.getAttribute("data-reveal-delay") || "0") + "ms";
+  });
+  var io = new IntersectionObserver(function (ents) {
+    ents.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = "1";
+        e.target.style.transform = "none";
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
 </body>
 </html>

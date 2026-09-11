@@ -2,495 +2,368 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>또렷 — 책갈피·형광펜·기록, 읽은 것이 사라지지 않는 브라우저</title>
 <meta name="description" content="다시 볼 페이지는 책갈피로, 중요한 구절은 형광펜으로, 요약한 내용은 기록으로 — 읽은 것이 사이드패널 한 곳에 쌓이는 크롬 익스텐션. 형광펜은 다시 방문해도 그 자리에 그대로. 폴더·태그 정리, 검색, 읽기 리마인더, 노트 앱 내보내기까지. 무료, 회원가입 없음, 온디바이스 처리.">
 <link rel="alternate" hreflang="ko" href="index.html">
 <link rel="alternate" hreflang="en" href="index.en.html">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
+  /* "또렷 랜딩 v2" 시안(claude.ai/design)의 정적 구현 — 다크 + 옐로 액센트. */
+  :root { --accent: #F2E75C; }
   * { box-sizing: border-box; }
-  body { margin: 0; background: #fff; color: #17181a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
-  a { color: #2a63e8; text-decoration: none; }
-  a:hover { color: #1e4db8; }
+  /* 리빌 초기 translateX(±48px)가 뷰포트 밖으로 튀며 가로 스크롤을 만든다 — clip은
+     hidden과 달리 스크롤 컨테이너를 만들지 않아 sticky 내비게이션이 깨지지 않는다. */
+  html, body { overflow-x: clip; }
+  body { margin: 0; background: #0B0B0C; color: #EDEDEA; font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #EDEDEA; text-decoration: none; }
+  a:hover { color: var(--accent); }
 
-  .nav { border-bottom: 1px solid #f0f1f3; position: sticky; top: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); z-index: 50; }
-  .nav-inner { max-width: 1080px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 16px 56px; }
-  .logo-badge { width: 28px; height: 28px; border-radius: 8px; background: #2a63e8; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-  .nav-links { margin-left: auto; display: flex; align-items: center; gap: 22px; }
-  .nav-links a { font-size: 14px; color: #55585d; }
-  .btn-primary, .btn-primary:visited, .btn-primary:hover, .btn-primary:focus { border: none; background: #2a63e8; color: #fff; font-weight: 700; border-radius: 999px; cursor: pointer; display: inline-block; text-decoration: none; text-align: center; }
-  .btn-primary:hover { background: #1e4db8; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes marqueeR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  @keyframes wordIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes floatY { 0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); } 50% { transform: translateY(-14px) rotate(var(--r, 0deg)); } }
+  @keyframes glowPulse { 0%, 100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
 
-  .hero { display: flex; align-items: center; gap: 56px; padding: 72px 56px; max-width: 1080px; margin: 0 auto; }
-  .hero h1 { margin: 0 0 18px; font-size: 46px; font-weight: 800; line-height: 1.28; letter-spacing: -0.03em; text-wrap: pretty; }
-  .hero p.lead { margin: 0 0 30px; font-size: 17px; line-height: 1.7; color: #55585d; text-wrap: pretty; }
-  .hero .note { margin: 12px 0 0; font-size: 13px; color: #9a9da3; }
+  /* ── 내비게이션 ── */
+  .nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; background: rgba(11,11,12,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #1D1D20; }
+  .nav-brand { display: flex; align-items: center; gap: 10px; }
+  .logo-badge { width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: #0B0B0C; display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+  .nav-name { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; }
+  .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+  .nav-links a { color: #A6A6A0; }
+  .nav-links a:hover { color: var(--accent); }
+  .btn-nav, .btn-nav:hover { background: #EDEDEA; color: #0B0B0C; padding: 9px 18px; border-radius: 99px; font-weight: 700; }
 
-  .section { max-width: 1080px; margin: 0 auto; padding: 56px; }
-  .section h2 { margin: 0 0 32px; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
-  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .feature { background: #f5f6f8; border-radius: 18px; padding: 26px 24px; }
-  .feature .glyph { width: 40px; height: 40px; border-radius: 12px; background: #fff; color: #2a63e8; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-  .feature h3 { margin: 0 0 8px; font-size: 17px; font-weight: 700; }
-  .feature p { margin: 0; font-size: 14px; line-height: 1.65; color: #55585d; }
-  .feature-core { background: #eef3fd; border: 1px solid #d9e4fb; }
-  .step { border: 1px solid #eceef1; border-radius: 16px; padding: 24px; }
-  .step .num { font-size: 13px; font-weight: 800; color: #2a63e8; }
-  .step h3 { margin: 10px 0 8px; font-size: 16.5px; font-weight: 700; }
-  .step p { margin: 0; font-size: 14px; line-height: 1.65; color: #55585d; }
+  /* ── 히어로 ── */
+  .hero { position: relative; max-width: 1100px; margin: 0 auto; padding: 110px 32px 80px; text-align: center; }
+  .hero-glow { position: absolute; inset: -120px 0 auto 0; height: 560px; background: radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%); pointer-events: none; animation: glowPulse 6s ease-in-out infinite; }
+  .float-card { position: absolute; animation: floatY 6s ease-in-out infinite; background: #131315; border: 1px solid #2A2A2E; border-radius: 14px; padding: 14px 18px; text-align: left; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+  .float-card .fc-head { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+  .float-card .fc-badge { width: 18px; height: 18px; border-radius: 5px; background: var(--accent); color: #0B0B0C; display: grid; place-items: center; font-size: 11px; font-weight: 800; }
+  .float-card .fc-body { margin-top: 8px; font-size: 12.5px; color: #A6A6A0; }
+  .float-card .fc-mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: #EDEDEA; padding: 1px 4px; border-radius: 3px; }
+  @media (max-width: 1180px) { .float-card { display: none; } }
 
-  .cta-band { background: #17181a; }
-  .cta-inner { max-width: 1080px; margin: 0 auto; padding: 52px 56px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
-  .cta-inner .txt { flex: 1; min-width: 260px; }
-  .cta-inner p.big { margin: 0 0 6px; font-size: 25px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
-  .cta-inner p.sub { margin: 0; font-size: 14px; color: #9a9da3; }
-  .btn-white, .btn-white:visited, .btn-white:hover, .btn-white:focus { white-space: nowrap; border: none; background: #fff; color: #17181a; font-size: 15px; font-weight: 700; padding: 14px 26px; border-radius: 999px; cursor: pointer; display: inline-block; text-decoration: none; text-align: center; }
-  .btn-white:hover { background: #e6e7ea; }
+  .hero-pill { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #2A2A2E; border-radius: 99px; padding: 7px 16px; font-size: 13px; color: #A6A6A0; margin-bottom: 36px; }
+  .hero-pill:hover { color: #A6A6A0; border-color: #3A3A3E; }
+  .hero-pill .arrow { color: var(--accent); }
+  .hero h1 { font-size: clamp(44px, 7.5vw, 88px); line-height: 1.06; letter-spacing: -0.04em; font-weight: 800; margin: 0; background: linear-gradient(180deg, #FFFFFF 30%, #B9B9B2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .rot-word { display: inline-block; background: linear-gradient(transparent 55%, color-mix(in srgb, var(--accent) 35%, transparent) 55%); animation: wordIn 0.5s ease; color: #FFFFFF; -webkit-text-fill-color: #FFFFFF; }
+  .hero .lead { max-width: 640px; margin: 28px auto 0; font-size: 18px; line-height: 1.7; color: #A6A6A0; text-wrap: pretty; }
+  .hero .lead strong, .step-card strong { color: #EDEDEA; }
+  .hero-ctas { display: flex; gap: 14px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
+  .btn-primary, .btn-primary:hover { background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 85%, white), var(--accent)); color: #0B0B0C; padding: 15px 30px; border-radius: 14px; font-weight: 800; font-size: 16px; box-shadow: 0 0 44px color-mix(in srgb, var(--accent) 32%, transparent), inset 0 1px 0 rgba(255,255,255,0.4); display: inline-block; }
+  .btn-ghost, .btn-ghost:hover { border: 1px solid #2A2A2E; padding: 15px 30px; border-radius: 14px; font-weight: 700; font-size: 16px; display: inline-block; }
+  .btn-ghost:hover { border-color: #3A3A3E; color: #EDEDEA; }
+  .hero-note { margin-top: 20px; font-size: 13px; color: #6E6E68; }
 
-  .footer { max-width: 1080px; margin: 0 auto; padding: 20px 40px; display: flex; align-items: center; }
-  .footer span { font-size: 13px; color: #83878d; }
-  .footer .links { margin-left: auto; display: flex; gap: 18px; }
-  .footer .links a { font-size: 13px; color: #83878d; }
+  /* ── 마퀴 ── */
+  .marquee-wrap { border-top: 1px solid #1D1D20; border-bottom: 1px solid #1D1D20; overflow: hidden; padding: 26px 0; background: linear-gradient(180deg, #101012, #0C0C0E); mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); }
+  .marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+  .stat-item { display: flex; align-items: baseline; gap: 10px; padding: 0 44px; border-right: 1px solid #1D1D20; white-space: nowrap; }
+  .stat-item .n { font-size: 28px; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+  .stat-item .l { font-size: 14px; color: #A6A6A0; }
+  .kw-wrap { border-top: 1px solid #1D1D20; overflow: hidden; padding: 22px 0; mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); }
+  .kw-track { display: flex; width: max-content; animation: marqueeR 32s linear infinite; }
+  .kw-item { display: flex; align-items: center; gap: 22px; padding: 0 22px; white-space: nowrap; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #3A3A3E; }
+  .kw-item .star { color: var(--accent); font-size: 12px; }
 
-  /* ── 스탯 스트립 ── */
-  .stats { border-top: 1px solid #f0f1f3; border-bottom: 1px solid #f0f1f3; background: #fafbfc; }
-  .stats-inner { max-width: 1080px; margin: 0 auto; padding: 30px 56px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-  .stat { text-align: center; }
-  .stat .big { font-size: 27px; font-weight: 800; letter-spacing: -0.02em; color: #17181a; }
-  .stat .big small { font-size: 15px; font-weight: 700; }
-  .stat .lbl { margin-top: 5px; font-size: 12.5px; line-height: 1.4; color: #83878d; }
+  /* ── 섹션 공통 ── */
+  .section { max-width: 1100px; margin: 0 auto; padding: 110px 32px 40px; }
+  .kicker { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: var(--accent); text-transform: uppercase; margin: 0 0 14px; }
+  .h2 { font-size: clamp(32px, 4.5vw, 52px); letter-spacing: -0.03em; font-weight: 800; margin: 0 0 18px; line-height: 1.1; }
+  .sub { color: #A6A6A0; font-size: 16px; max-width: 560px; margin: 0 0 52px; line-height: 1.7; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
 
-  /* ── 활용 사례 ── */
-  .usecase { display: flex; gap: 14px; align-items: flex-start; background: #f5f6f8; border-radius: 16px; padding: 20px 22px; }
-  .usecase .ico { flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-  .usecase h3 { margin: 2px 0 5px; font-size: 15.5px; font-weight: 700; }
-  .usecase p { margin: 0; font-size: 13.5px; line-height: 1.6; color: #55585d; }
+  /* ── 기능 카드 ── */
+  .f-card { background: linear-gradient(180deg, #17171A, #111113); border: 1px solid #1D1D20; border-radius: 18px; padding: 28px; transition: border-color 0.2s, box-shadow 0.2s, transform 0.25s; }
+  .f-card:hover { border-color: color-mix(in srgb, var(--accent) 40%, #1D1D20); box-shadow: 0 12px 40px -18px color-mix(in srgb, var(--accent) 45%, transparent); transform: translateY(-5px); }
+  .f-icon { width: 40px; height: 40px; border-radius: 11px; background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 22%, #1D1D20), #1D1D20); border: 1px solid color-mix(in srgb, var(--accent) 25%, #1D1D20); color: var(--accent); display: grid; place-items: center; font-weight: 800; font-size: 17px; margin-bottom: 18px; }
+  .f-card h3 { font-size: 18px; font-weight: 800; margin: 0 0 10px; letter-spacing: -0.01em; }
+  .f-card p { margin: 0; font-size: 14.5px; line-height: 1.7; color: #A6A6A0; text-wrap: pretty; }
 
-  /* ── Before / After ── */
-  .ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: stretch; }
-  .ba-col { border-radius: 18px; padding: 24px; }
-  .ba-before { background: #f5f6f8; border: 1px solid #eceef1; }
-  .ba-after { background: #eef3fd; border: 1px solid #d9e4fb; }
-  .ba-tag { display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: 0.04em; padding: 4px 11px; border-radius: 999px; margin-bottom: 14px; }
-  .ba-before .ba-tag { background: #e6e7ea; color: #6b6e74; }
-  .ba-after .ba-tag { background: #2a63e8; color: #fff; }
-  .ba-col p.body { margin: 0; font-size: 14px; line-height: 1.75; color: #55585d; }
-  .ba-concl { margin: 0 0 4px; font-size: 14.5px; font-weight: 700; line-height: 1.6; color: #17181a; }
-  .ba-arrow { align-self: center; font-size: 22px; color: #2a63e8; font-weight: 800; }
-  .ba-li { display: flex; gap: 9px; align-items: flex-start; margin-top: 10px; font-size: 13.5px; line-height: 1.6; color: #3a3d42; }
-  .ba-li .d { width: 6px; height: 6px; border-radius: 50%; background: #2a63e8; margin-top: 7px; flex-shrink: 0; }
+  /* ── 사용 방법 ── */
+  .step-card { background: linear-gradient(180deg, #17171A, #111113); border: 1px solid #1D1D20; border-radius: 18px; padding: 32px 28px; }
+  .step-num { font-size: 44px; font-weight: 900; letter-spacing: -0.04em; color: var(--accent); margin-bottom: 16px; }
+  .step-card h3 { font-size: 18px; font-weight: 800; margin: 0 0 10px; }
+  .step-card p { margin: 0; font-size: 14.5px; line-height: 1.7; color: #A6A6A0; }
 
-  /* ── 신뢰 밴드 ── */
-  .trust { background: #eef3fd; }
-  .trust-inner { max-width: 1080px; margin: 0 auto; padding: 56px; }
-  .trust h2 { margin: 0 0 10px; font-size: 27px; font-weight: 800; letter-spacing: -0.02em; }
-  .trust .sub { margin: 0 0 28px; font-size: 15px; color: #55585d; line-height: 1.7; max-width: 640px; }
-  .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .trust-card { background: #fff; border-radius: 16px; padding: 22px; }
-  .trust-card .ico { font-size: 22px; margin-bottom: 10px; }
-  .trust-card h3 { margin: 0 0 6px; font-size: 15.5px; font-weight: 700; }
-  .trust-card p { margin: 0; font-size: 13.5px; line-height: 1.65; color: #55585d; }
+  /* ── 비교 ── */
+  .ba-before { background: #111113; border: 1px solid #1D1D20; border-radius: 18px; padding: 32px; }
+  .ba-label { margin: 0 0 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .ba-before p.body { margin: 0; font-size: 15.5px; line-height: 1.8; color: #A6A6A0; text-wrap: pretty; }
+  .ba-before strong, .ba-after strong { color: #EDEDEA; }
+  .ba-after { background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 8%, #131315), #111113); border: 1px solid color-mix(in srgb, var(--accent) 35%, #1D1D20); border-radius: 18px; padding: 32px; }
+  .ba-list { display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.6; color: #D8D8D2; }
+  .ba-list .row { display: flex; gap: 10px; }
+  .ba-list .check { color: var(--accent); }
+
+  /* ── 프라이버시 ── */
+  .p-card { background: linear-gradient(180deg, #17171A, #111113); border: 1px solid #1D1D20; border-radius: 18px; padding: 28px; }
+  .p-card h3 { font-size: 17px; font-weight: 800; margin: 0 0 10px; }
+  .p-card p { margin: 0; font-size: 14.5px; line-height: 1.7; color: #A6A6A0; }
 
   /* ── FAQ ── */
-  .faq details { border: 1px solid #eceef1; border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
-  .faq summary { list-style: none; cursor: pointer; padding: 18px 22px; font-size: 15.5px; font-weight: 700; color: #17181a; display: flex; align-items: center; }
-  .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: "+"; margin-left: auto; padding-left: 16px; font-size: 21px; font-weight: 400; color: #9a9da3; }
-  .faq details[open] summary::after { content: "\2212"; }
-  .faq details[open] summary { border-bottom: 1px solid #f0f1f3; }
-  .faq .ans { padding: 16px 22px 20px; font-size: 14px; line-height: 1.75; color: #55585d; }
-  .faq .ans b { color: #3a3d42; }
+  .faq { max-width: 760px; margin: 0 auto; padding: 0 32px 110px; }
+  details { border-top: 1px solid #1D1D20; padding: 4px 0; }
+  details > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; font-size: 16.5px; font-weight: 700; }
+  details > summary::-webkit-details-marker { display: none; }
+  .dt-plus { color: var(--accent); font-size: 20px; transition: transform 0.2s; flex-shrink: 0; }
+  details[open] .dt-plus { transform: rotate(45deg); }
+  details p { margin: 0 0 22px; font-size: 15px; line-height: 1.75; color: #A6A6A0; text-wrap: pretty; }
 
-  /* ── 데모 애니메이션 ── */
-  .demo-wrap { flex-shrink: 0; background: linear-gradient(160deg, #eef3fd, #dfe8fa); border-radius: 20px; padding: 28px; }
-  .demo-stage { position: relative; width: 350px; height: 470px; }
-  .demo-card { position: absolute; inset: 0; border-radius: 22px; }
-  .chip { display: flex; align-items: flex-start; gap: 9px; background: #e6e7ea; border-radius: 12px; padding: 9px 12px; }
-  .chip .dot { width: 5px; height: 5px; border-radius: 50%; background: #2a63e8; margin-top: 6px; flex-shrink: 0; }
-  .chip span:last-child { font-size: 11px; line-height: 1.55; color: #3a3d42; }
+  /* ── 푸터 ── */
+  .footer { border-top: 1px solid #1D1D20; text-align: center; padding: 110px 32px 0; overflow: hidden; }
+  .footer .h2f { font-size: clamp(30px, 4vw, 46px); letter-spacing: -0.03em; font-weight: 800; margin: 0 0 16px; }
+  .footer .subf { color: #A6A6A0; font-size: 15px; margin: 0 0 32px; }
+  .footer-links { display: flex; gap: 24px; justify-content: center; margin: 52px 0 0; font-size: 13.5px; flex-wrap: wrap; }
+  .footer-links a { color: #6E6E68; }
+  .footer-links a:hover { color: var(--accent); }
+  .copyright { font-size: 12.5px; color: #3A3A3E; margin: 24px 0 0; }
+  .giant { font-size: clamp(120px, 24vw, 340px); font-weight: 900; letter-spacing: -0.05em; line-height: 0.78; margin-top: 40px; user-select: none; background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 16%, #141416), #0B0B0C 90%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
-  /* 데모 4단계 흐름: ①선택+툴바(0~20%) ②형광펜 하이라이트+노트(20~44%) ③책갈피 저장(44~68%) ④사이드패널 타임라인(68~100%) */
-  @keyframes selectLine { 0%, 4% { background: #eff0f2; } 10%, 100% { background: #b9d1f9; } }
-  @keyframes floatBtn { 0%, 6% { opacity: 0; transform: scale(0.6); } 9%, 16% { opacity: 1; transform: scale(1); } 20%, 100% { opacity: 0; transform: scale(0.9); } }
-  @keyframes cursorMove { 0% { transform: translate(130px, 190px); opacity: 0; } 4% { opacity: 1; transform: translate(130px, 190px); } 11%, 13% { transform: translate(0, 0); } 14% { transform: translate(0, 0) scale(0.8); } 16%, 18% { transform: translate(0, 0) scale(1); } 20%, 100% { opacity: 0; transform: translate(0, 0); } }
-  @keyframes highlightIn { 0%, 20% { opacity: 0; transform: translateY(14px); } 24%, 42% { opacity: 1; transform: translateY(0); } 46%, 100% { opacity: 0; transform: translateY(-6px); } }
-  @keyframes markSweep { 0%, 24% { background-size: 0% 82%; } 33%, 100% { background-size: 100% 82%; } }
-  @keyframes popupIn { 0%, 44% { opacity: 0; transform: translateY(14px) scale(0.97); } 48%, 64% { opacity: 1; transform: translateY(0) scale(1); } 68%, 100% { opacity: 0; transform: translateY(-6px) scale(0.98); } }
-  @keyframes p1 { 0%, 50% { opacity: 0; transform: translateY(6px); } 54%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes p2 { 0%, 54% { opacity: 0; transform: translateY(6px); } 58%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes p3 { 0%, 58% { opacity: 0; transform: translateY(6px); } 62%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes histIn { 0%, 68% { opacity: 0; transform: translateX(18px); } 72%, 96% { opacity: 1; transform: translateX(0); } 99%, 100% { opacity: 0; } }
-  @keyframes h1a { 0%, 74% { opacity: 0; transform: translateY(8px); } 78%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes h2a { 0%, 78% { opacity: 0; transform: translateY(8px); } 82%, 100% { opacity: 1; transform: translateY(0); } }
-  @keyframes h3a { 0%, 82% { opacity: 0; transform: translateY(8px); } 86%, 100% { opacity: 1; transform: translateY(0); } }
-
-  @media (max-width: 900px) {
-    .hero { flex-direction: column; padding: 48px 24px; gap: 40px; }
-    .hero h1 { font-size: 34px; }
-    .section { padding: 40px 24px; }
-    .grid3, .grid2 { grid-template-columns: 1fr; }
-    .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 22px 16px; padding: 28px 24px; }
-    .ba { grid-template-columns: 1fr; }
-    .ba-arrow { transform: rotate(90deg); justify-self: center; }
-    .trust-inner { padding: 40px 24px; }
-    .trust-grid { grid-template-columns: 1fr; }
-    .cta-inner { padding: 40px 24px; }
-    .nav-inner { padding: 14px 24px; }
-    .nav-links a.hide-m { display: none; }
+  /* 리빌 초기 상태는 JS가 부여한다(no-JS 환경에서도 내용이 항상 보이도록). */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track, .kw-track, .float-card, .hero-glow, .rot-word { animation: none !important; }
+    .f-card { transition: none; }
   }
 </style>
 </head>
 <body>
-
-<nav class="nav">
-  <div class="nav-inner">
-    <span class="logo-badge">또</span>
-    <span style="font-size: 15px; font-weight: 700;">또렷</span>
+  <!-- 내비게이션 -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="logo-badge">또</div>
+      <span class="nav-name">또렷</span>
+    </div>
     <div class="nav-links">
-      <a class="hide-m" href="#features">기능</a>
-      <a class="hide-m" href="#usecases">활용</a>
-      <a class="hide-m" href="#faq">FAQ</a>
-      <a href="index.en.html" title="English page">EN</a>
-      <a class="btn-primary" style="font-size: 13px; padding: 9px 18px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가</a>
+      <a href="#features">기능</a>
+      <a href="#faq">FAQ</a>
+      <a href="index.en.html">EN</a>
+      <a class="btn-nav" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가</a>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<header class="hero">
-  <div style="flex: 1; min-width: 280px;">
-    <h1>읽은 것이<br>사라지지 않는<br>브라우저</h1>
-    <p class="lead">중요한 구절은 <b>형광펜</b>으로 칠하고, 다시 볼 페이지는 <b>책갈피</b>로 저장하세요. 요약한 내용까지 전부 <b>기록</b>으로 쌓여, 사이드패널 한 곳에서 검색하고 폴더·태그로 정리하고 노트 앱으로 내보낼 수 있습니다. 칠해 둔 형광펜은 <b>다시 방문해도 그 자리에 그대로</b>. 필요할 땐 두괄식 <b>AI 요약</b>도 — 전부 내 기기 안에서, 무료로.</p>
-    <a class="btn-primary" style="font-size: 15px; padding: 14px 26px; border-radius: 10px;" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기 — 무료</a>
-    <p class="note">회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
-  </div>
+  <!-- ① 히어로 -->
+  <header class="hero">
+    <div class="hero-glow"></div>
+    <div class="float-card" style="left:-30px;top:230px;--r:-5deg;animation-duration:6s;">
+      <div class="fc-head"><span class="fc-badge">또</span>형광펜 저장됨</div>
+      <div class="fc-body"><span class="fc-mark">내 메모</span> — 여기 꼭 다시 확인하기</div>
+    </div>
+    <div class="float-card" style="right:-30px;top:330px;--r:4deg;animation-duration:7s;">
+      <div class="fc-head"><span class="fc-badge">또</span>책갈피 저장됨</div>
+      <div class="fc-body">📁 회사 · 읽기 알림 오늘 9:00</div>
+    </div>
+    <div style="position:relative;">
+      <a class="hero-pill" href="#features">형광펜은 다시 방문해도 그 자리에 그대로 <span class="arrow">→</span></a>
+      <h1>읽은 것이<br><span class="rot-word" id="rot-word">사라지지 않는</span> 브라우저</h1>
+      <p class="lead">중요한 구절은 <strong>형광펜</strong>으로 칠하고, 다시 볼 페이지는 <strong>책갈피</strong>로 저장하세요. 요약한 내용까지 전부 <strong>기록</strong>으로 쌓여, 사이드패널 한 곳에서 검색하고 폴더·태그로 정리하고 노트 앱으로 내보낼 수 있습니다.</p>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기 — 무료</a>
+        <a class="btn-ghost" href="#features">기능 살펴보기</a>
+      </div>
+      <p class="hero-note">회원가입 없음 · 데이터는 내 브라우저에만 저장 · 평생 무료</p>
+    </div>
+  </header>
 
-  <!-- 애니메이션 데모: 선택 → 형광펜 → 책갈피 → 사이드패널 -->
-  <div class="demo-wrap">
-    <div class="demo-stage">
+  <!-- ② 스탯 마퀴 -->
+  <section class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track" id="stat-track">
+      <div class="stat-item"><span class="n">1클릭</span><span class="l">드래그 한 번이면 형광펜·책갈피 저장</span></div>
+      <div class="stat-item"><span class="n">3탭</span><span class="l">책갈피 · 기록 · 하이라이트</span></div>
+      <div class="stat-item"><span class="n">100%</span><span class="l">온디바이스 처리·저장</span></div>
+      <div class="stat-item"><span class="n">0원</span><span class="l">평생 무료, 결제 없음</span></div>
+      <div class="stat-item"><span class="n">0건</span><span class="l">회원가입 · API 키</span></div>
+    </div>
+  </section>
 
-      <!-- stage 1: 글 선택 + 플로팅 툴바(요약·형광펜·책갈피) -->
-      <div class="demo-card" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 16px rgba(42,99,232,0.1); padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
-        <div style="width: 220px; height: 17px; border-radius: 5px; background: #e6e7ea; margin-bottom: 8px;"></div>
-        <div style="width: 92%; height: 11px; border-radius: 4px; animation: selectLine 14s linear infinite;"></div>
-        <div style="width: 97%; height: 11px; border-radius: 4px; animation: selectLine 14s linear infinite;"></div>
-        <div style="width: 64%; height: 11px; border-radius: 4px; animation: selectLine 14s linear infinite;"></div>
-        <div style="width: 89%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 94%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 71%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 90%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 84%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 52%; height: 11px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="position: absolute; top: 126px; left: 20px; display: flex; align-items: center; gap: 1px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.16); border-radius: 999px; padding: 5px 6px; animation: floatBtn 14s ease infinite;">
-          <span style="display: flex; align-items: center; gap: 4px; color: #3a3d42; font-size: 10.5px; font-weight: 700; padding: 5px 9px; white-space: nowrap;">요약</span>
-          <span style="display: flex; align-items: center; gap: 4px; background: #fef3c7; color: #92600a; font-size: 10.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; white-space: nowrap;">형광펜</span>
-          <span style="display: flex; align-items: center; gap: 4px; background: #2a63e8; color: #fff; font-size: 10.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; white-space: nowrap;">책갈피</span>
-        </div>
-        <div style="position: absolute; top: 146px; left: 176px; pointer-events: none; animation: cursorMove 14s ease-in-out infinite; z-index: 10;">
-          <div style="width: 0; height: 0; border-left: 9px solid #17181a; border-right: 5px solid transparent; border-bottom: 16px solid transparent; border-top: 5px solid transparent; transform: rotate(-70deg); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));"></div>
+  <!-- ③ 기능 그리드 -->
+  <section id="features" class="section">
+    <p class="kicker">핵심은 셋 — 책갈피 · 형광펜 · 기록</p>
+    <h2 class="h2" data-reveal>칠하고, 저장하고,<br>다시 찾기까지.</h2>
+    <p class="sub">전부 무료, 회원가입 없음. 드래그 한 번이면 형광펜·책갈피가 저장되고 사이드패널 한 곳에 모입니다.</p>
+    <div class="grid" data-reveal>
+      <div class="f-card"><div class="f-icon">책</div><h3>책갈피 — 일단 저장</h3><p>다시 볼 페이지를 요약 없이 그대로 저장합니다. 글을 선택했다면 그 문장까지 함께. 툴바 버튼이나 우클릭 한 번이면 끝이라, 읽던 흐름이 끊기지 않아요.</p></div>
+      <div class="f-card"><div class="f-icon">형</div><h3>형광펜 — 그 자리에 그대로</h3><p>중요한 구절을 형광펜으로 칠하고 메모를 답니다. 저장한 하이라이트는 다시 방문해도 같은 자리에 다시 표시되고, 사이드패널에 기사별로 모여요.</p></div>
+      <div class="f-card"><div class="f-icon">기</div><h3>기록 — 자동으로 쌓이는</h3><p>요약한 결과는 따로 저장하지 않아도 날짜별 타임라인에 자동으로 쌓입니다. 검색 한 번이면 “그때 그 글”을 바로 다시 찾아요.</p></div>
+      <div class="f-card"><div class="f-icon">정</div><h3>폴더 + 태그로 정리</h3><p>책갈피·기록·하이라이트 어디에든 폴더 하나와 태그 여러 개를 붙일 수 있습니다. 폴더·태그·검색을 조합해 원하는 것만 걸러 보세요.</p></div>
+      <div class="f-card"><div class="f-icon">알</div><h3>읽기 리마인더</h3><p>저장한 항목에 읽을 시각을 걸어 두세요. 시간이 되면 알림과 화면 카드로 알려 주고, 매일·매주 반복이나 10분 미루기도 됩니다.</p></div>
+      <div class="f-card"><div class="f-icon">내</div><h3>노트 앱으로 내보내기</h3><p>모아둔 것을 마크다운으로 다운로드하거나 클립보드로 복사해 노션·옵시디언에 그대로 붙여 넣으세요. 지금 보이는 필터 그대로 내보내집니다.</p></div>
+      <div class="f-card"><div class="f-icon">찾</div><h3>본문까지 뒤지는 검색</h3><p>책갈피는 본문 스냅샷까지 저장돼 제목이 기억나지 않아도 내용으로 찾습니다. 초성 검색과 오타 허용에, 매치된 문장은 발췌로 바로 보여요.</p></div>
+      <div class="f-card"><div class="f-icon">요</div><h3>두괄식 AI 요약</h3><p>긴 글을 선택하면 결론 한 문장 + 요점 목록으로 정리해 줍니다. 우클릭 한 번이면 페이지 전체도 통째로. 결과는 기록에 자동 저장돼요.</p></div>
+      <div class="f-card"><div class="f-icon">✎</div><h3>우클릭 6모드</h3><p>요약·작성·교정·말투·번역·물어보기를 골라 쓸 수 있습니다. 모르는 단어는 더블클릭하면 쉬운 뜻이 풍선으로 떠요.</p></div>
+    </div>
+  </section>
+
+  <!-- 사용 방법 -->
+  <section id="how" class="section" style="padding:110px 32px;">
+    <p class="kicker" data-reveal style="text-align:center;">사용 방법</p>
+    <h2 class="h2" data-reveal style="margin-bottom:52px;text-align:center;">세 단계면 끝.</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+      <div class="step-card" data-reveal="left" data-reveal-delay="0">
+        <div class="step-num">01</div>
+        <h3>익스텐션 설치</h3>
+        <p>Chrome 웹 스토어에서 추가하면 준비 끝. 별도 설정이 필요 없습니다.</p>
+      </div>
+      <div class="step-card" data-reveal="left" data-reveal-delay="140">
+        <div class="step-num">02</div>
+        <h3>글 선택 → 칠하거나 저장</h3>
+        <p>글을 드래그하면 <strong>[요약]·[형광펜]·[책갈피]</strong> 툴바가 나타납니다. 칠하고, 저장하고, 필요하면 요약하세요.</p>
+      </div>
+      <div class="step-card" data-reveal="left" data-reveal-delay="280">
+        <div class="step-num">03</div>
+        <h3>사이드패널에서 다시 찾기</h3>
+        <p>툴바 아이콘을 누르면 <strong>책갈피·기록·하이라이트</strong> 3탭 패널이 열립니다. 검색하고, 정리하고, 내보내세요.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 비교 -->
+  <section class="section" style="padding:0 32px 110px;">
+    <h2 class="h2" data-reveal style="margin-bottom:52px;text-align:center;">흩어져 사라지던 읽기가,<br>이렇게 모입니다.</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:stretch;">
+      <div class="ba-before" data-reveal="left">
+        <p class="ba-label" style="color:#6E6E68;">지금까지는</p>
+        <p class="body">열어 둔 탭 서른 개, "나에게 보내기"로 쌓인 링크, 캡처 폴더 속 스크린샷… 분명 중요해서 남겼는데, 정작 필요할 때는 <strong>어디에 뒀는지 기억나지 않습니다.</strong> 다시 찾다 지쳐 포기한 글이 몇 개인가요.</p>
+      </div>
+      <div class="ba-after" data-reveal="right" data-reveal-delay="140">
+        <p class="ba-label" style="color:var(--accent);">또렷에서는</p>
+        <div class="ba-list">
+          <div class="row"><span class="check">✓</span>책갈피·형광펜·기록이 사이드패널 한 곳에 모입니다</div>
+          <div class="row"><span class="check">✓</span>다시 방문하면 형광펜이 그 자리에 그대로</div>
+          <div class="row"><span class="check">✓</span>날짜 타임라인 · 검색 · 폴더 · 태그로 몇 초 만에 다시 찾기</div>
+          <div class="row"><span class="check">✓</span>마크다운으로 노트 앱에 내보내기까지</div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <!-- stage 2: 형광펜 하이라이트 + 노트 -->
-      <div class="demo-card" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 16px rgba(42,99,232,0.1); padding: 22px 24px; display: flex; flex-direction: column; gap: 11px; animation: highlightIn 14s ease infinite; opacity: 0;">
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">또</span>
-          <span style="font-size: 13.5px; font-weight: 700;">형광펜</span>
-          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: #fef3c7; color: #92600a; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#92600a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6.5 16.5l8-8a2 2 0 0 1 3 3l-8 8-4 1z"/></svg>저장됨</span>
-        </div>
-        <div style="width: 210px; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 96%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="line-height: 1.95;">
-          <span style="font-size: 13px; color: #17181a; font-weight: 600; background: linear-gradient(#fde68a, #fde68a) no-repeat; background-size: 0% 82%; background-position: 0 62%; box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 1px 2px; animation: markSweep 14s ease infinite;">칠한 하이라이트는 다시 방문해도 그 자리에 그대로 남아 있어요.</span>
-        </div>
-        <div style="width: 84%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="width: 66%; height: 12px; border-radius: 4px; background: #eff0f2;"></div>
-        <div style="margin-top: 6px; display: flex; gap: 8px; align-items: flex-start; background: #f8f9fb; border-left: 3px solid #f0c000; border-radius: 8px; padding: 10px 12px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92600a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;"><path d="M4 5a1 1 0 0 1 1-1h10l5 5v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M14 4v5h5"/><path d="M8 13h7M8 16h5"/></svg>
-          <span style="font-size: 11.5px; line-height: 1.5; color: #3a3d42;">내 메모 — 여기 꼭 다시 확인하기</span>
-        </div>
-      </div>
-
-      <!-- stage 3: 책갈피 저장 -->
-      <div class="demo-card" style="background: #f2f2f4; box-shadow: 0 12px 36px rgba(42,99,232,0.2); padding: 15px; display: flex; flex-direction: column; justify-content: center; gap: 9px; animation: popupIn 14s ease infinite; opacity: 0;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">또</span>
-          <span style="font-size: 14px; font-weight: 700;">책갈피</span>
-          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: #2a63e8; color: #fff; font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg>저장됨</span>
-        </div>
-        <div style="background: #fff; border-radius: 14px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); animation: p1 14s ease infinite;">
-          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-            <span style="width: 16px; height: 16px; border-radius: 4px; background: #e6e7ea; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0;">📰</span>
-            <p style="margin: 0; font-size: 12.5px; font-weight: 700; line-height: 1.5;">[공지] 사내 카페 시즌 이벤트 안내</p>
-          </div>
-          <p style="margin: 0; font-size: 10.5px; color: #9a9da3;">intra.example.com/notice/1024</p>
-        </div>
-        <div class="chip" style="animation: p2 14s ease infinite;"><span class="dot"></span><span>요약 없이 페이지를 그대로 저장 — 선택한 문장이 있으면 함께 담겨요.</span></div>
-        <div class="chip" style="animation: p3 14s ease infinite;"><span class="dot"></span><span>읽을 준비가 되면 사이드패널에서 언제든 다시 열 수 있어요.</span></div>
-        <div style="display: flex; gap: 6px; margin-top: 2px; animation: p3 14s ease infinite;">
-          <span style="background: #e6e7ea; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px;">📁 회사</span>
-          <span style="background: #e6e7ea; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px;">#이벤트</span>
-          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #55585d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#55585d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>읽기 알림</span>
-        </div>
-      </div>
-
-      <!-- stage 4: 사이드패널 책갈피 타임라인 -->
-      <div class="demo-card" style="background: #f2f2f4; box-shadow: 0 12px 36px rgba(42,99,232,0.2); padding: 16px; display: flex; flex-direction: column; gap: 10px; animation: histIn 14s ease infinite; opacity: 0;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="logo-badge" style="width: 24px; height: 24px; border-radius: 7px; font-size: 11px;">또</span>
-          <span style="font-size: 14px; font-weight: 700;">사이드패널</span>
-        </div>
-        <div style="display: flex; background: #e2e3e6; border-radius: 999px; padding: 2px;">
-          <span style="flex: 1; text-align: center; background: #2a63e8; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 0; border-radius: 999px;">책갈피</span>
-          <span style="flex: 1; text-align: center; color: #83878d; font-size: 10px; font-weight: 700; padding: 4px 0;">기록</span>
-          <span style="flex: 1; text-align: center; color: #83878d; font-size: 10px; font-weight: 700; padding: 4px 0;">하이라이트</span>
-        </div>
-        <span style="font-size: 10.5px; font-weight: 700; color: #9a9da3; letter-spacing: 0.03em; padding-left: 2px;">오늘</span>
-        <div style="display: flex; flex-direction: column;">
-          <div style="display: flex; align-items: stretch; animation: h1a 14s ease infinite;">
-            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">방금 전</span></div>
-            <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
-            <div style="flex: 1; padding-bottom: 8px;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">📰 [공지] 사내 카페 시즌 이벤트 안내</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">intra.example.com · 📁 회사 · #이벤트</p></div></div>
-          </div>
-          <div style="display: flex; align-items: stretch; animation: h2a 14s ease infinite;">
-            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">1시간 전</span></div>
-            <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
-            <div style="flex: 1; padding-bottom: 8px;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">📊 산업 리포트 — 3분기 시장 전망</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">research.example.com · #리서치</p></div></div>
-          </div>
-          <div style="display: flex; align-items: stretch; animation: h3a 14s ease infinite;">
-            <div style="width: 40px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-top: 12px;"><span style="font-size: 10px; font-weight: 600; color: #7c7f85; white-space: nowrap;">어제</span></div>
-            <div style="width: 28px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;"><div style="width: 2px; flex: 0 0 9px; background: #d5d7db;"></div><span style="width: 10px; height: 10px; border-radius: 50%; background: #2a63e8; border: 2px solid #f2f2f4; box-shadow: 0 0 0 2px #d5d7db; flex-shrink: 0;"></span><div style="width: 2px; flex: 1; background: #d5d7db;"></div></div>
-            <div style="flex: 1;"><div style="background: #fff; border-radius: 13px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);"><p style="margin: 0 0 3px; font-size: 11px; font-weight: 700; line-height: 1.4;">✍️ 블로그 — 글 잘 쓰는 법 12가지</p><p style="margin: 0; font-size: 10.5px; color: #6b6e74; line-height: 1.5;">blog.example.com · 📁 공부</p></div></div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</header>
-
-<div class="stats">
-  <div class="stats-inner">
-    <div class="stat"><div class="big">1<small>클릭</small></div><div class="lbl">드래그 한 번이면<br>형광펜·책갈피 저장</div></div>
-    <div class="stat"><div class="big">3<small>탭</small></div><div class="lbl">책갈피·기록·<br>하이라이트</div></div>
-    <div class="stat"><div class="big">100<small>%</small></div><div class="lbl">온디바이스<br>처리·저장</div></div>
-    <div class="stat"><div class="big">0<small>원</small></div><div class="lbl">평생 무료<br>결제 없음</div></div>
-    <div class="stat"><div class="big">0<small>건</small></div><div class="lbl">회원가입·<br>API 키</div></div>
-  </div>
-</div>
-
-<section class="section" id="features">
-  <h2>핵심은 셋 — 책갈피 · 형광펜 · 기록</h2>
-  <div class="grid3">
-    <div class="feature feature-core">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg></span>
-      <h3>책갈피 — 일단 저장</h3>
-      <p>다시 볼 페이지를 <b>요약 없이 그대로</b> 저장합니다. 글을 선택했다면 그 문장까지 함께. 툴바 버튼이나 <b>우클릭 한 번</b>이면 끝이라, 읽던 흐름이 끊기지 않아요.</p>
-    </div>
-    <div class="feature feature-core">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6.5 16.5l8-8a2 2 0 0 1 3 3l-8 8-4 1z"/></svg></span>
-      <h3>형광펜 — 그 자리에 그대로</h3>
-      <p>중요한 구절을 형광펜으로 칠하고 <b>메모</b>를 답니다. 저장한 하이라이트는 <b>다시 방문해도 같은 자리에</b> 다시 표시되고, 사이드패널에 기사별로 모여요.</p>
-    </div>
-    <div class="feature feature-core">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6.5h12M8 12h12M8 17.5h12"/><circle cx="4.2" cy="6.5" r="1.1"/><circle cx="4.2" cy="12" r="1.1"/><circle cx="4.2" cy="17.5" r="1.1"/></svg></span>
-      <h3>기록 — 자동으로 쌓이는</h3>
-      <p>요약한 결과는 따로 저장하지 않아도 <b>날짜별 타임라인</b>에 자동으로 쌓입니다. 사이트 파비콘과 함께 <b>검색</b> 한 번이면 "그때 그 글"을 바로 다시 찾아요.</p>
-    </div>
-  </div>
-  <h2 style="margin-top: 56px;">모아둔 것을 더 쓸모 있게</h2>
-  <div class="grid2">
-    <div class="feature">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></svg></span>
-      <h3>폴더 + 태그로 정리</h3>
-      <p>책갈피·기록·하이라이트 어디에든 <b>📁 폴더</b> 하나와 <b>#태그</b> 여러 개를 붙일 수 있습니다. 폴더·태그·검색을 조합해 쌓인 것들 속에서 원하는 것만 걸러 보세요.</p>
-    </div>
-    <div class="feature">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>
-      <h3>읽기 리마인더</h3>
-      <p>"나중에 읽어야지" 하고 잊지 않도록, 저장한 항목에 <b>읽을 시각</b>을 걸어 두세요. 시간이 되면 <b>알림과 화면 카드</b>로 알려 주고, 매일·매주 반복이나 10분 미루기도 됩니다.</p>
-    </div>
-    <div class="feature">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4.5 19.5h15"/></svg></span>
-      <h3>노트 앱으로 내보내기</h3>
-      <p>모아둔 책갈피·기록·하이라이트를 <b>마크다운</b>으로 다운로드하거나 <b>클립보드로 복사</b>해 노션·옵시디언에 그대로 붙여 넣으세요. 지금 보이는 필터 그대로 내보내집니다.</p>
-    </div>
-    <div class="feature">
-      <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></span>
-      <h3>본문까지 뒤지는 검색</h3>
-      <p>책갈피는 <b>본문 스냅샷</b>까지 저장돼 제목이 기억나지 않아도 내용으로 찾습니다. <b>초성 검색</b>과 <b>오타 허용</b>에, 매치된 문장은 발췌·형광 표시로 바로 보여요.</p>
-    </div>
-  </div>
-  <h2 style="margin-top: 56px;">필요할 땐, 읽기를 돕는 AI</h2>
-  <div class="grid3">
-    <div class="feature">
-      <span class="glyph">요</span>
-      <h3>두괄식 요약</h3>
-      <p>긴 글을 선택하면 <b>결론 한 문장 + 요점 목록</b>으로 정리해 줍니다. 선택 없이 <b>우클릭 한 번</b>이면 페이지 전체도 통째로. 결과는 기록에 자동 저장돼요.</p>
-    </div>
-    <div class="feature">
-      <span class="glyph">✎</span>
-      <h3>우클릭 6모드</h3>
-      <p>우클릭 메뉴에서 <b>요약·작성·교정·말투·번역·물어보기</b>를 골라 쓸 수 있습니다. 두괄식 다시 쓰기, 맞춤법 교정, 존댓말↔반말, 온디바이스 번역, 선택한 글에 질문까지.</p>
-    </div>
-    <div class="feature">
-      <span class="glyph">뜻</span>
-      <h3>단어 뜻풀이 · 읽어주기</h3>
-      <p>모르는 단어는 <b>더블클릭</b>하면 문맥에 맞는 쉬운 뜻이 작은 풍선으로 떠요. 요약·번역 결과는 <b>소리로 읽어주기</b>도 됩니다.</p>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="usecases" style="padding-top: 8px;">
-  <h2>이럴 때 특히 든든합니다</h2>
-  <div class="grid3">
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></span>
-      <div><h3>자료 조사·리서치</h3><p>근거가 되는 구절마다 형광펜과 메모를 남기고 폴더로 묶으세요. 흩어진 출처가 한 패널에 모입니다.</p></div>
-    </div>
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4.5-6 4.5z"/></svg></span>
-      <div><h3>"나중에 읽어야지"</h3><p>지금 못 읽는 글은 책갈피로 저장하고 읽기 리마인더를 걸어 두세요. 잊을 때쯤 알림이 옵니다.</p></div>
-    </div>
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 0 1 2-2h13.5v14H6.5a2.5 2.5 0 0 0-2.5 2.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H19.5v-4"/></svg></span>
-      <div><h3>공부·학습</h3><p>강의 자료·아티클에 형광펜과 메모를 남기고 폴더·태그로 과목별로 정리하세요. 마크다운으로 내보내 복습 노트까지.</p></div>
-    </div>
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="13.5" height="15" rx="1.5"/><path d="M16.5 8H20v9.5a2 2 0 0 1-2 2"/><path d="M6 8.5h7M6 11.5h7M6 14.5h4.5"/></svg></span>
-      <div><h3>긴 뉴스·아티클</h3><p>스크롤이 끝없는 기사는 두괄식 요약으로 핵심부터. 요약 결과는 기록에 자동으로 남아 다시 찾기 쉬워요.</p></div>
-    </div>
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6.5h12M8 12h12M8 17.5h12"/><circle cx="4.2" cy="6.5" r="1.1"/><circle cx="4.2" cy="12" r="1.1"/><circle cx="4.2" cy="17.5" r="1.1"/></svg></span>
-      <div><h3>"그거 어디서 봤더라"</h3><p>기억은 흐려져도 기록은 남습니다. 검색·폴더·태그·파비콘으로 지난주에 본 그 글을 몇 초 만에.</p></div>
-    </div>
-    <div class="usecase">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4.5 19.5h15"/></svg></span>
-      <div><h3>노션·옵시디언 사용자</h3><p>웹에서 모은 것을 마크다운으로 복사해 내 노트 앱에 그대로. 정리 체계를 옮길 필요가 없어요.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" style="padding-top: 8px;">
-  <h2>흩어져 사라지던 읽기가, 이렇게 모입니다</h2>
-  <div class="ba">
-    <div class="ba-col ba-before">
-      <span class="ba-tag">지금까지는</span>
-      <p class="body">열어 둔 탭 서른 개, "나에게 보내기"로 쌓인 링크, 캡처 폴더 속 스크린샷… 분명 중요해서 남겼는데, 정작 필요할 때는 <b>어디에 뒀는지 기억나지 않습니다.</b> 다시 찾다 지쳐 포기한 글이 몇 개인가요.</p>
-    </div>
-    <div class="ba-arrow">→</div>
-    <div class="ba-col ba-after">
-      <span class="ba-tag">또렷에서는</span>
-      <p class="ba-concl">책갈피·형광펜·기록이 사이드패널 한 곳에 모입니다.</p>
-      <div class="ba-li"><span class="d"></span><span>다시 방문하면 형광펜이 그 자리에 그대로</span></div>
-      <div class="ba-li"><span class="d"></span><span>날짜 타임라인 · 검색 · 폴더 · 태그로 몇 초 만에 다시 찾기</span></div>
-      <div class="ba-li"><span class="d"></span><span>마크다운으로 노트 앱에 내보내기까지</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" style="padding-top: 8px;">
-  <h2>사용 방법은 세 단계면 끝</h2>
-  <div class="grid3">
-    <div class="step">
-      <span class="num">01</span>
-      <h3>익스텐션 설치</h3>
-      <p>Chrome 웹 스토어에서 추가하면 준비 끝. 별도 설정이 필요 없습니다.</p>
-    </div>
-    <div class="step">
-      <span class="num">02</span>
-      <h3>글 선택 → 칠하거나 저장</h3>
-      <p>글을 드래그하면 <b>[요약]·[형광펜]·[책갈피]</b> 툴바가 나타납니다. 칠하고, 저장하고, 필요하면 요약하세요. 우클릭 메뉴로 6가지 AI 모드도 쓸 수 있어요.</p>
-    </div>
-    <div class="step">
-      <span class="num">03</span>
-      <h3>사이드패널에서 다시 찾기</h3>
-      <p>툴바 아이콘을 누르면 <b>책갈피·기록·하이라이트</b> 3탭 패널이 열립니다. 검색하고, 폴더·태그로 정리하고, 리마인더를 걸고, 노트 앱으로 내보내세요.</p>
-    </div>
-  </div>
-</section>
-
-<section class="trust">
-  <div class="trust-inner">
-    <h2>내가 읽은 것은 내 브라우저를 떠나지 않습니다</h2>
-    <p class="sub">책갈피·형광펜·기록은 전부 <b>내 컴퓨터의 브라우저 저장소</b>에만 저장되고, AI 요약도 기본은 Chrome 내장 AI로 <b>기기 안에서</b> 처리합니다. 외부 서버도, 로그인도 없어요.</p>
-    <div class="trust-grid">
-      <div class="trust-card">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><circle cx="12" cy="15" r="1.2"/></svg></div>
-        <h3>저장도 처리도 로컬</h3>
+  <!-- 프라이버시 -->
+  <section class="section" style="padding:0 32px 110px;">
+    <p class="kicker" data-reveal>Privacy First</p>
+    <h2 class="h2" data-reveal>내가 읽은 것은<br>내 브라우저를 떠나지 않습니다.</h2>
+    <p class="sub" data-reveal style="max-width:600px;">책갈피·형광펜·기록은 전부 내 컴퓨터의 브라우저 저장소에만 저장되고, AI 요약도 기본은 Chrome 내장 AI로 기기 안에서 처리합니다. 외부 서버도, 로그인도 없어요.</p>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+      <div class="p-card" data-reveal="scale" data-reveal-delay="0">
+        <h3>🔒 저장도 처리도 로컬</h3>
         <p>회사 문서에 칠한 형광펜도, 개인 메일 요약도 밖으로 나가지 않습니다. 삭제·관리 전부 내 손에.</p>
       </div>
-      <div class="trust-card">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="4.5" rx="1.2"/><path d="M5 13v7.5h14V13"/><path d="M12 8.5V20.5"/><path d="M12 8.5C9.8 8.5 7.5 8 7.5 6A2.3 2.3 0 0 1 12 5.5a2.3 2.3 0 0 1 4.5.5c0 2-2.3 2.5-4.5 2.5z"/></svg></div>
-        <h3>평생 무료</h3>
+      <div class="p-card" data-reveal="scale" data-reveal-delay="140">
+        <h3>∞ 평생 무료</h3>
         <p>구독도, 광고도, 사용량 제한도 없습니다. 설치하는 순간 모든 기능을 그대로 쓸 수 있어요.</p>
       </div>
-      <div class="trust-card">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a63e8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v6M6 14v6M12 4v8M12 16v4M18 4v2M18 10v10"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="14" r="2"/><circle cx="18" cy="8" r="2"/></svg></div>
-        <h3>원하면 더 강력하게</h3>
+      <div class="p-card" data-reveal="scale" data-reveal-delay="280">
+        <h3>⚡ 원하면 더 강력하게</h3>
         <p>옵션에서 내 OpenAI·Anthropic·Gemini API 키를 넣어 AI 기능을 더 큰 모델로 바꿀 수도 있어요. 선택은 자유.</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section" id="faq">
-  <h2>자주 묻는 질문</h2>
-  <div class="faq">
-    <details open>
-      <summary>정말 무료인가요?</summary>
-      <div class="ans">네. 책갈피·형광펜·기록·리마인더·요약·내보내기까지 <b>모든 기능이 무료</b>입니다. 결제 수단을 등록할 필요도, 사용량 제한도 없습니다.</div>
-    </details>
-    <details>
-      <summary>제 데이터는 어디에 저장되나요?</summary>
-      <div class="ans">책갈피·형광펜·기록은 전부 <b>내 컴퓨터의 브라우저 저장소</b>에만 쌓입니다. AI 요약도 기본 설정에서는 선택한 글이 외부로 전송되지 않고 기기 안에서 처리돼요. 검색·삭제도 직접 관리합니다.</div>
-    </details>
-    <details>
-      <summary>형광펜은 다시 방문해도 남아 있나요?</summary>
-      <div class="ans">네. 칠해 둔 하이라이트는 같은 페이지를 다시 열면 <b>같은 자리에 다시 표시</b>됩니다. 메모도 함께 남고, 사이드패널에서 기사별로 모아 보거나 지울 수 있어요.</div>
-    </details>
-    <details>
-      <summary>책갈피와 기록은 뭐가 다른가요?</summary>
-      <div class="ans"><b>책갈피</b>는 요약 없이 페이지(와 선택한 문장)를 그대로 저장하는 "나중에 읽기"입니다. <b>기록</b>은 AI 요약을 쓸 때마다 결과가 자동으로 쌓이는 타임라인이에요. 여기에 <b>하이라이트</b>(형광펜+메모)까지, 사이드패널 3개 탭으로 나뉘어 정리됩니다.</div>
-    </details>
-    <details>
-      <summary>저장한 걸 노트 앱으로 옮길 수 있나요?</summary>
-      <div class="ans">네. 각 탭에서 <b>마크다운 파일 다운로드</b> 또는 <b>클립보드 복사</b>를 눌러 노션·옵시디언 등에 그대로 붙여 넣을 수 있습니다. 검색·폴더·태그로 걸러 둔 상태라면, 지금 보이는 목록 그대로 내보내져요.</div>
-    </details>
-    <details>
-      <summary>AI 기능은 뭐가 있나요?</summary>
-      <div class="ans">글을 선택하면 <b>두괄식 요약</b>(선택 없이 우클릭하면 페이지 전체), 우클릭 메뉴에서 <b>작성·교정·말투·번역·물어보기</b>, 단어 <b>더블클릭 뜻풀이</b>, 결과 <b>읽어주기</b>를 쓸 수 있습니다. 자주 쓰는 모드는 옵션에서 툴바에 추가할 수도 있어요.</div>
-    </details>
-    <details>
-      <summary>더 똑똑한 AI를 쓰고 싶어요.</summary>
-      <div class="ans">옵션 페이지에서 내 <b>OpenAI·Anthropic·Gemini API 키</b>를 입력하면 해당 모델로 전환됩니다. 이 경우 선택한 글이 해당 제공사로 전송되며, 안내에 따라 직접 선택할 수 있어요. 책갈피·형광펜·기록 저장은 이때도 내 브라우저에만 남습니다.</div>
-    </details>
-    <details>
-      <summary>개선 의견이나 버그를 알리고 싶어요.</summary>
-      <div class="ans">언제든 <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">qkrxodud00@gmail.com</a> 으로 메일을 보내 주세요. 불편했던 점, 바라는 기능 무엇이든 환영합니다 — <b>하나하나 읽고 반영</b>합니다.</div>
-    </details>
-  </div>
-</section>
-
-<section class="cta-band">
-  <div class="cta-inner">
-    <div class="txt">
-      <p class="big">칠하고, 저장하고, 다시 찾기까지 — 클릭 한 번으로</p>
-      <p class="sub">무료 · 회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
+  <!-- FAQ -->
+  <section id="faq" class="faq">
+    <p class="kicker">Knowledge Base</p>
+    <h2 class="h2" data-reveal style="margin-bottom:40px;">자주 묻는 질문.</h2>
+    <div style="display:flex;flex-direction:column;">
+      <details data-reveal>
+        <summary>정말 무료인가요?<span class="dt-plus">＋</span></summary>
+        <p>네. 책갈피·형광펜·기록·리마인더·요약·내보내기까지 모든 기능이 무료입니다. 결제 수단을 등록할 필요도, 사용량 제한도 없습니다.</p>
+      </details>
+      <details data-reveal>
+        <summary>제 데이터는 어디에 저장되나요?<span class="dt-plus">＋</span></summary>
+        <p>책갈피·형광펜·기록은 전부 내 컴퓨터의 브라우저 저장소에만 쌓입니다. AI 요약도 기본 설정에서는 선택한 글이 외부로 전송되지 않고 기기 안에서 처리돼요.</p>
+      </details>
+      <details data-reveal>
+        <summary>형광펜은 다시 방문해도 남아 있나요?<span class="dt-plus">＋</span></summary>
+        <p>네. 칠해 둔 하이라이트는 같은 페이지를 다시 열면 같은 자리에 다시 표시됩니다. 메모도 함께 남고, 사이드패널에서 기사별로 모아 보거나 지울 수 있어요.</p>
+      </details>
+      <details data-reveal>
+        <summary>책갈피와 기록은 뭐가 다른가요?<span class="dt-plus">＋</span></summary>
+        <p>책갈피는 요약 없이 페이지(와 선택한 문장)를 그대로 저장하는 "나중에 읽기"입니다. 기록은 AI 요약을 쓸 때마다 결과가 자동으로 쌓이는 타임라인이에요. 여기에 하이라이트까지, 사이드패널 3개 탭으로 나뉘어 정리됩니다.</p>
+      </details>
+      <details data-reveal>
+        <summary>더 똑똑한 AI를 쓰고 싶어요.<span class="dt-plus">＋</span></summary>
+        <p>옵션 페이지에서 내 OpenAI·Anthropic·Gemini API 키를 입력하면 해당 모델로 전환됩니다. 책갈피·형광펜·기록 저장은 이때도 내 브라우저에만 남습니다.</p>
+      </details>
     </div>
-    <a class="btn-white" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기</a>
-  </div>
-</section>
+  </section>
 
-<footer class="footer">
-  <span>© 2026 또렷</span>
-  <div class="links">
-    <a href="#faq">자주 묻는 질문</a>
-    <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">의견 보내기</a>
-    <a href="privacy.html">개인정보처리방침</a>
-    <a href="index.en.html">English</a>
-  </div>
-</footer>
+  <!-- 키워드 마퀴(역방향) -->
+  <section class="kw-wrap" aria-hidden="true">
+    <div class="kw-track" id="kw-track">
+      <div class="kw-item"><span class="star">✦</span>책갈피</div>
+      <div class="kw-item"><span class="star">✦</span>형광펜</div>
+      <div class="kw-item"><span class="star">✦</span>기록</div>
+      <div class="kw-item"><span class="star">✦</span>두괄식 요약</div>
+      <div class="kw-item"><span class="star">✦</span>읽기 리마인더</div>
+      <div class="kw-item"><span class="star">✦</span>폴더·태그</div>
+      <div class="kw-item"><span class="star">✦</span>본문 검색</div>
+      <div class="kw-item"><span class="star">✦</span>마크다운 내보내기</div>
+    </div>
+  </section>
 
+  <!-- CTA + 푸터 -->
+  <section class="footer">
+    <h2 class="h2f" data-reveal>칠하고, 저장하고, 다시 찾기까지 —<br>클릭 한 번으로</h2>
+    <p class="subf">무료 · 회원가입 없음 · 데이터는 내 브라우저에만 저장</p>
+    <a class="btn-primary" href="https://chromewebstore.google.com/detail/easy-read/plnaodidachgimdfpchdpjlgfehmpkaj" target="_blank" rel="noopener">Chrome에 추가하기</a>
+    <div class="footer-links">
+      <a href="#faq">자주 묻는 질문</a>
+      <a href="mailto:qkrxodud00@gmail.com?subject=Clarity%20feedback">의견 보내기</a>
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="index.en.html">English</a>
+    </div>
+    <p class="copyright">© 2026 또렷</p>
+    <div class="giant" aria-hidden="true">또렷</div>
+  </section>
+
+<script>
+(function () {
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ① 히어로 로테이션 단어 — 2.6초마다 교체, 교체 시 wordIn 애니메이션 재생.
+  var words = ["사라지지 않는", "다시 찾아지는", "그대로 남는", "차곡차곡 쌓이는"];
+  var rot = document.getElementById("rot-word");
+  var ri = 0;
+  if (rot && !reduced) {
+    setInterval(function () {
+      ri = (ri + 1) % words.length;
+      var next = rot.cloneNode(false); // 애니메이션 재시작을 위해 노드 교체
+      next.textContent = words[ri];
+      rot.parentNode.replaceChild(next, rot);
+      rot = next;
+    }, 2600);
+  }
+
+  // ② 마퀴 무한 루프 — 트랙 내용을 복제해 -50% 이동이 이어져 보이게 한다.
+  ["stat-track", "kw-track"].forEach(function (id) {
+    var track = document.getElementById(id);
+    if (track) track.innerHTML += track.innerHTML;
+  });
+
+  // ③ 스크롤 리빌 — JS가 초기 상태를 부여하므로 no-JS 환경에서는 항상 보인다.
+  var els = document.querySelectorAll("[data-reveal]");
+  if (reduced || !("IntersectionObserver" in window)) return;
+  els.forEach(function (el) {
+    var m = el.getAttribute("data-reveal");
+    el.style.opacity = "0";
+    el.style.transform = m === "left" ? "translateX(-48px)" : m === "right" ? "translateX(48px)" : m === "scale" ? "scale(0.9)" : "translateY(28px)";
+    el.style.transition = "opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1)";
+    el.style.transitionDelay = (el.getAttribute("data-reveal-delay") || "0") + "ms";
+  });
+  var io = new IntersectionObserver(function (ents) {
+    ents.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = "1";
+        e.target.style.transform = "none";
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
 </body>
 </html>
